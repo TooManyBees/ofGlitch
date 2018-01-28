@@ -48,7 +48,9 @@ bool OniManager::setup(int w, int h, int fps, bool mirror) {
 	return true;
 }
 
-void OniManager::getDepthFrame(ofImage* image) {
+void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's invoked, ugh */) {
+	userFrame.release(); // does this need a conditional?
+	
 	userTracker.readFrame(&userFrame);
 	if (!userFrame.isValid()) {
 		printf("err :(");
@@ -86,6 +88,8 @@ void OniManager::getDepthFrame(ofImage* image) {
 
 		image->setFromPixels(pDepthMap, frameWidth, frameHeight, OF_IMAGE_GRAYSCALE);
 	}
+
+	depthFrame.release();
 }
 
 //bool OniManager::updateUserFrame() {
@@ -99,6 +103,7 @@ void OniManager::getDepthFrame(ofImage* image) {
 //}
 
 void OniManager::getColorFrame(ofImage* image) {
+	colorFrame.release();
 	colorStream.readFrame(&colorFrame);
 	//updateColorFrame();
 	if (colorFrame.isValid()) {
