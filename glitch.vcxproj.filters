@@ -21,6 +21,9 @@
     <Filter Include="addons">
       <UniqueIdentifier>{0615612a-b630-4c72-8ab0-34e6bc07e475}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{c807134c-0027-4291-a2c2-bd059d3e5835}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -35,5 +38,19 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\data\beglitch.frag">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\check.frag">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\identity.vert">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\usermask.frag">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
 </Project>
