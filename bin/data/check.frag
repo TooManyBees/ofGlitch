@@ -1,6 +1,6 @@
 #version 150
 
-uniform sampler2DRect tex0;
+//uniform sampler2DRect tex0;
 uniform sampler2DRect usermask;
 uniform vec2 resolution;
 uniform float outside;
@@ -33,9 +33,7 @@ void main() {
 
     float checks = checker(texCoordRotated, size);
 
-	float user = texelUser.r;
-
-    float mask = abs(user - outside);
+    float mask = abs(texelUser.r - clamp(outside, 0.0, 1.0));
 
     outputColor = vec4(vec3(checks), mask);
 }

@@ -42,6 +42,7 @@ class ofApp : public ofBaseApp{
 		ofImage glitchBuffer;
 
 		ofShader beglitch;
+		ofShader checker;
 		ofShader usermask;
 
 		bool needsResize;
@@ -56,6 +57,7 @@ class ofApp : public ofBaseApp{
 		Toggle* toggleBuffer;
 		Toggle* toggleVideo;
 		Toggle* toggleThreshold;
+		Toggle* togglePattern;
 		Toggle* toggleRainbows;
 		vector<Toggle*> ui;
 

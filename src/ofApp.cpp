@@ -48,6 +48,7 @@ void ofApp::setup(){
 	userFrame.setColor(0);
 
 	usermask.load("identity.vert", "usermask.frag");
+	checker.load("identity.vert", "check.frag");
 	beglitch.load("identity.vert", "beglitch.frag");
 
 	uiFont.load("AnonymousProBold.ttf", 18) || uiFont.load(OF_TTF_MONO, 18);
@@ -60,11 +61,13 @@ void ofApp::setup(){
 	toggleBuffer = new Toggle("B", 'b', "draw buffer", ofPoint(10, 10), &uiFont);
 	toggleVideo = new Toggle("V", 'v', "draw video", ofPoint(10, 35), &uiFont, true);
 	toggleThreshold = new Toggle("T", 't', "threshold video", ofPoint(10, 60), &uiFont, true);
-	toggleRainbows = new Toggle("R", 'r', "rainbows", ofPoint(10, 85), &uiFont, true);
+	togglePattern = new Toggle("P", 'p', "pattern", ofPoint(10, 85), &uiFont);
+	toggleRainbows = new Toggle("R", 'r', "rainbows", ofPoint(10, 100), &uiFont, true);
 
 	ui.push_back(toggleBuffer);
 	ui.push_back(toggleVideo);
 	ui.push_back(toggleThreshold);
+	ui.push_back(togglePattern);
 	ui.push_back(toggleRainbows);
 
 	ofSetFullscreen(fullscreen);
@@ -128,6 +131,17 @@ void ofApp::draw(){
 		}
 		colorFrame.draw(canvasSpace);
 		if (toggleThreshold->isOn()) usermask.end();
+	}
+
+	if (togglePattern->isOn()) {
+		checker.begin();
+		checker.setUniform1f("outside", 1.0);
+		checker.setUniform1f("time", (float)(ofGetElapsedTimeMillis() % 3000) / 3000.0 * PI);
+		checker.setUniform1f("size", 10.0);
+		checker.setUniform2f("resolution", (float)ofGetWidth(), (float)ofGetHeight());
+		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
+		glitchBuffer.draw(canvasSpace);
+		checker.end();
 	}
 
 	// Draw the glitch!
