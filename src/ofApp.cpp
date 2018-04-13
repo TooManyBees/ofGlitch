@@ -51,34 +51,32 @@ void ofApp::setup(){
 	checker.load("identity.vert", "check.frag");
 	beglitch.load("identity.vert", "beglitch.frag");
 
-	uiFont.load("AnonymousProBold.ttf", 18) || uiFont.load(OF_TTF_MONO, 18);
-	statsFont.load("AnonymousPro.ttf", 12) || statsFont.load(OF_TTF_MONO, 12);
-	if (!uiFont.isLoaded() || !statsFont.isLoaded()) {
-		cerr << "Couldn't load fonts." << endl;
-		return std::exit(1);
-	}
-
-	toggleBuffer = new Toggle("B", 'b', "draw buffer", ofPoint(10, 10), &uiFont);
-	toggleVideo = new Toggle("V", 'v', "draw video", ofPoint(10, 35), &uiFont, true);
-	toggleThreshold = new Toggle("T", 't', "threshold video", ofPoint(10, 60), &uiFont, true);
-	togglePattern = new Toggle("P", 'p', "pattern", ofPoint(10, 85), &uiFont);
-	toggleRainbows = new Toggle("R", 'r', "rainbows", ofPoint(10, 110), &uiFont, true);
-
-	ui.push_back(toggleBuffer);
-	ui.push_back(toggleVideo);
-	ui.push_back(toggleThreshold);
-	ui.push_back(togglePattern);
-	ui.push_back(toggleRainbows);
-
 	ofSetFullscreen(fullscreen);
-	videoThreshold = 0.35;
-	rainbowThreshold = 0.6;
 	needsResize = true;
+}
 
-	timeCycle = 8000;
-	timeOffset = 0;
-	beatCycle = 2000;
-	timeOffset = 0;
+void ofApp::setupGui() {
+	paramsLayers.setName("Layers");
+	paramsLayers.add(showBuffer.set("Show buffer", false));
+	paramsLayers.add(showVideo.set("Show video", true));
+	paramsLayers.add(showThreshold.set("Threshold video", true));
+	paramsLayers.add(showRainbows.set("Show Rainbows", true));
+
+	paramsLevels.setName("Levels");
+	paramsLevels.add(levelsRainbow.set("Rainbows", 0.6, 0.0, 1.0));
+	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));
+
+	paramsChecker.setName("Checker pattern");
+	paramsChecker.add(showChecker.set("Enabled", false));
+	paramsChecker.add(timeCycleLength.set("Spin duration (ms)", 8000, 0, 20000));
+	paramsChecker.add(timeCycleOffset.set("Spin offset (ms)", 0, 0, 20000));
+	paramsChecker.add(beatCycleLength.set("Beat duration (ms)", 2000, 0, 20000));
+	paramsChecker.add(beatCycleOffset.set("Beat offset (ms)", 0, 0, 20000));
+
+	gui.setup();
+	gui.add(paramsLayers);
+	gui.add(paramsLevels);
+	gui.add(paramsChecker);
 }
 
 unsigned char mysteryDiff(unsigned char a, unsigned char b) {
@@ -111,38 +109,37 @@ void ofApp::update(){
 	glitchBuffer.update();
 	oni_manager.getUserFrame(&userFrame);
 
-	updateUi();
+	//updateUi();
 
 	if (needsResize) sizeCanvasSpace();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	if (toggleBuffer->isOn()) {
+	if (showBuffer) {
 		ofSetColor(255);
 		glitchBuffer.draw(canvasSpace);
-		if (displayUi) drawUi();
 		return;
 	}
 
 	ofBackground(0);
 
-	if (toggleVideo->isOn()) {
+	if (showVideo) {
 		// Draw the color frame, optionally masked and thresholded
-		if (toggleThreshold->isOn()) {
+		if (showThreshold) {
 			usermask.begin();
 			usermask.setUniformTexture("usermask", userFrame.getTexture(), 1);
-			usermask.setUniform1f("threshold", videoThreshold);
+			usermask.setUniform1f("threshold", levelsThreshold);
 		}
 		colorFrame.draw(canvasSpace);
-		if (toggleThreshold->isOn()) usermask.end();
+		if (showThreshold) usermask.end();
 	}
 
-	if (togglePattern->isOn()) {
+	if (showChecker) {
 		checker.begin();
 		checker.setUniform1f("outside", 1.0);
-		checker.setUniform1f("timeCycle", cycle(timeCycle, timeOffset));
-		checker.setUniform1f("beatCycle", cycle(beatCycle, beatOffset));
+		checker.setUniform1f("timeCycle", cycle(timeCycleLength, timeCycleOffset));
+		checker.setUniform1f("beatCycle", cycle(beatCycleLength, beatCycleOffset));
 		checker.setUniform1f("size", 10);
 		checker.setUniform2f("resolution", (float)ofGetWidth(), (float)ofGetHeight());
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
@@ -151,64 +148,63 @@ void ofApp::draw(){
 	}
 
 	// Draw the glitch!
-	if (toggleRainbows->isOn()) {
+	if (showRainbows) {
 		beglitch.begin();
-		beglitch.setUniform1f("threshold", rainbowThreshold);
+		beglitch.setUniform1f("threshold", levelsRainbow);
 		ofFloatColor color;
 		color.setHsb(ofRandom(1.0), 1.0, 1.0);
 		beglitch.setUniform3f("color", color.r, color.g, color.b);
 		glitchBuffer.draw(canvasSpace);
 		beglitch.end();
 	}
-
-	if (displayUi) drawUi();
 }
 
-void ofApp::updateUi() {
-	toggleVideo->enableThisFrame(!toggleBuffer->isOn());
-	toggleThreshold->enableThisFrame(toggleVideo->isOn());
-	toggleRainbows->enableThisFrame(!toggleBuffer->isOn());
-}
-
-void ofApp::drawUi() {
-	for (Toggle* elem : ui) {
-		elem->draw();
-	}
-	ofSetColor(255);
-	sprintf(statsString, "Rainbows: %.2f\nFaces: %.2f", rainbowThreshold, videoThreshold);
-	statsFont.drawString(statsString, 5.0, ofGetHeight() - statsFont.stringHeight(statsString));
+void ofApp::drawGui(ofEventArgs & args) {
+	gui.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	switch (key) {
 	case 'u':
-		displayUi = !displayUi;
+		// if ui window closed, reopen and reattach listeners
 		break;
 	case 'f':
 		fullscreen = !fullscreen;
 		ofSetFullscreen(fullscreen);
 		break;
+	case 'b':
+		showBuffer = !showBuffer;
+		break;
+	case 'v':
+		showVideo = !showVideo;
+		break;
+	case 't':
+		showThreshold = !showThreshold;
+		break;
+	case 'c':
+		showChecker = !showChecker;
+		break;
+	case 'r':
+		showRainbows = !showRainbows;
+		break;
 	case OF_KEY_UP:
-		rainbowThreshold = ofClamp(rainbowThreshold - 0.05, 0.0, 1.0);
+		levelsRainbow -= 0.05;
 		break;
 	case OF_KEY_DOWN:
-		rainbowThreshold = ofClamp(rainbowThreshold + 0.05, 0.0, 1.0);
+		levelsRainbow += 0.05;
 		break;
 	case OF_KEY_LEFT:
-		videoThreshold = ofClamp(videoThreshold + 0.025, 0.0, 1.0);
+		levelsThreshold += 0.025;
 		break;
 	case OF_KEY_RIGHT:
-		videoThreshold = ofClamp(videoThreshold - 0.025, 0.0, 1.0);
+		levelsThreshold -= 0.025;
 		break;
-	default:
-		for (Toggle* elem : ui) {
-			if (elem->wasPressed(key)) {
-				elem->click();
-				return;
-			}
-		}
 	}
+}
+
+void ofApp::keyPressedInGui(ofKeyEventArgs & args) {
+	keyPressed(args.key);
 }
 
 //--------------------------------------------------------------
@@ -228,12 +224,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	for (Toggle* elem : ui) {
-		if (elem->wasClicked(x, y)) {
-			elem->click();
-			return;
-		}
-	}
+
 }
 
 //--------------------------------------------------------------

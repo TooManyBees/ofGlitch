@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "openni.h"
 #include "OniManager.h"
-#include "toggle.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -29,6 +29,10 @@ class ofApp : public ofBaseApp{
 		static const int HEIGHT = 480;
 		static const int FPS = 30;
 
+		void setupGui();
+		void drawGui(ofEventArgs & args);
+		void keyPressedInGui(ofKeyEventArgs & args);
+
 	private:
 		bool mirror = true;
 		bool fullscreen = false;
@@ -53,19 +57,19 @@ class ofApp : public ofBaseApp{
 		bool needsResize;
 		void sizeCanvasSpace();
 
-		bool displayUi = false;
-		ofTrueTypeFont uiFont;
-		ofTrueTypeFont statsFont;
-		char statsString[30];
-		float videoThreshold;
-		float rainbowThreshold;
-		Toggle* toggleBuffer;
-		Toggle* toggleVideo;
-		Toggle* toggleThreshold;
-		Toggle* togglePattern;
-		Toggle* toggleRainbows;
-		vector<Toggle*> ui;
-
-		void updateUi();
-		void drawUi();
+		ofParameterGroup paramsLayers;
+		ofParameter<bool> showBuffer;
+		ofParameter<bool> showVideo;
+		ofParameter<bool> showThreshold;
+		ofParameter<bool> showRainbows;
+		ofParameterGroup paramsLevels;
+		ofParameter<float> levelsRainbow;
+		ofParameter<float> levelsThreshold;
+		ofParameterGroup paramsChecker;
+		ofParameter<bool> showChecker;
+		ofParameter<size_t> timeCycleLength;
+		ofParameter<size_t> timeCycleOffset;
+		ofParameter<size_t> beatCycleLength;
+		ofParameter<size_t> beatCycleOffset;
+		ofxGuiGroup gui;
 };
