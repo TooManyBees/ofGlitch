@@ -1,4 +1,5 @@
 #version 150
+#define PI 3.1415926535897932384626433832795
 
 //uniform sampler2DRect tex0;
 uniform sampler2DRect usermask;
@@ -23,8 +24,8 @@ float checker(vec2 uv, float size) {
 void main() {
     vec2 middle = resolution * 0.5;
 
-    float cosFactor = cos(time);
-    float sinFactor = sin(time);
+    float cosFactor = cos(time * 2.0 * PI);
+    float sinFactor = sin(time * 2.0 * PI);
 	mat2 rotation = mat2(cosFactor, -sinFactor, sinFactor, cosFactor);
     vec2 texCoordRotated = (texCoordVarying - middle) * rotation;
 

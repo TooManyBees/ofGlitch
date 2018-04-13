@@ -135,9 +135,10 @@ void ofApp::draw(){
 
 	if (togglePattern->isOn()) {
 		checker.begin();
+		float cyclicTime = (float)(ofGetElapsedTimeMillis() % 3000) / 3000.0;
 		checker.setUniform1f("outside", 1.0);
-		checker.setUniform1f("time", (float)(ofGetElapsedTimeMillis() % 3000) / 3000.0 * PI);
-		checker.setUniform1f("size", 10.0);
+		checker.setUniform1f("time", cyclicTime);
+		checker.setUniform1f("size", 10);
 		checker.setUniform2f("resolution", (float)ofGetWidth(), (float)ofGetHeight());
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
 		glitchBuffer.draw(canvasSpace);
