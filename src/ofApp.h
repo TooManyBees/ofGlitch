@@ -44,6 +44,11 @@ class ofApp : public ofBaseApp{
 		ofShader beglitch;
 		ofShader checker;
 		ofShader usermask;
+		size_t timeCycle;
+		size_t timeOffset;
+		size_t beatCycle;
+		size_t beatOffset;
+		float cycle(size_t length, size_t offset);
 
 		bool needsResize;
 		void sizeCanvasSpace();

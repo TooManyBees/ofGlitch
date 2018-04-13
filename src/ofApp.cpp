@@ -62,7 +62,7 @@ void ofApp::setup(){
 	toggleVideo = new Toggle("V", 'v', "draw video", ofPoint(10, 35), &uiFont, true);
 	toggleThreshold = new Toggle("T", 't', "threshold video", ofPoint(10, 60), &uiFont, true);
 	togglePattern = new Toggle("P", 'p', "pattern", ofPoint(10, 85), &uiFont);
-	toggleRainbows = new Toggle("R", 'r', "rainbows", ofPoint(10, 100), &uiFont, true);
+	toggleRainbows = new Toggle("R", 'r', "rainbows", ofPoint(10, 110), &uiFont, true);
 
 	ui.push_back(toggleBuffer);
 	ui.push_back(toggleVideo);
@@ -74,6 +74,11 @@ void ofApp::setup(){
 	videoThreshold = 0.35;
 	rainbowThreshold = 0.6;
 	needsResize = true;
+
+	timeCycle = 8000;
+	timeOffset = 0;
+	beatCycle = 2000;
+	timeOffset = 0;
 }
 
 unsigned char mysteryDiff(unsigned char a, unsigned char b) {
@@ -135,9 +140,9 @@ void ofApp::draw(){
 
 	if (togglePattern->isOn()) {
 		checker.begin();
-		float cyclicTime = (float)(ofGetElapsedTimeMillis() % 3000) / 3000.0;
 		checker.setUniform1f("outside", 1.0);
-		checker.setUniform1f("time", cyclicTime);
+		checker.setUniform1f("timeCycle", cycle(timeCycle, timeOffset));
+		checker.setUniform1f("beatCycle", cycle(beatCycle, beatOffset));
 		checker.setUniform1f("size", 10);
 		checker.setUniform2f("resolution", (float)ofGetWidth(), (float)ofGetHeight());
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
@@ -285,4 +290,10 @@ void ofApp::sizeCanvasSpace() {
 	canvasSpace.height = scaleHeight;
 	printf("Drawing at (%.2f, %.2f): %.2f x %.2f\n", canvasSpace.x, canvasSpace.y, canvasSpace.width, canvasSpace.height);
 	needsResize = false;
+}
+
+float ofApp::cycle(size_t length, size_t offset) {
+	float fLength = (float)length;
+	float fCycle = (float)(ofGetElapsedTimeMillis() % length + offset);
+	return fCycle / fLength;
 }

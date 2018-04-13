@@ -6,7 +6,8 @@ uniform sampler2DRect usermask;
 uniform vec2 resolution;
 uniform float outside;
 uniform float size;
-uniform float time;
+uniform float timeCycle;
+uniform float beatCycle;
 uniform float threshold;
 
 in vec2 texCoordVarying;
@@ -21,18 +22,27 @@ float checker(vec2 uv, float size) {
     return mod(xy.x + xy.y, 2.0);
 }
 
+float pulse(float time) {
+    float h = 10.0 * time;
+    return h * exp(1.0 - h);
+}
+
+float inversePulse(float time) {
+    return 1.0 - 0.1 * pulse(time);
+}
+
 void main() {
     vec2 middle = resolution * 0.5;
 
-    float cosFactor = cos(time * 2.0 * PI);
-    float sinFactor = sin(time * 2.0 * PI);
+    float cosFactor = cos(timeCycle * 2.0 * PI);
+    float sinFactor = sin(timeCycle * 2.0 * PI);
 	mat2 rotation = mat2(cosFactor, -sinFactor, sinFactor, cosFactor);
     vec2 texCoordRotated = (texCoordVarying - middle) * rotation;
 
     //vec4 texelGlitch = texture(tex0, texCoordVarying);
     vec4 texelUser = texture(usermask, texCoordVarying);
 
-    float checks = checker(texCoordRotated, size);
+    float checks = checker(texCoordRotated, size * inversePulse(beatCycle));
 
     float mask = abs(texelUser.r - clamp(outside, 0.0, 1.0));
 
