@@ -6,6 +6,7 @@ uniform sampler2DRect usermask;
 uniform vec2 resolution;
 uniform float outside;
 uniform float size;
+uniform float amplitude;
 uniform float timeCycle;
 uniform float beatCycle;
 uniform float threshold;
@@ -28,7 +29,7 @@ float pulse(float time) {
 }
 
 float inversePulse(float time) {
-    return 1.0 - 0.1 * pulse(time);
+    return 1.0 - 0.1 * amplitude * pulse(time);
 }
 
 void main() {

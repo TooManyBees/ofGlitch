@@ -67,11 +67,13 @@ void ofApp::setupGui() {
 	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));
 
 	paramsChecker.setName("Checker pattern");
-	paramsChecker.add(showChecker.set("Enabled", false));
-	paramsChecker.add(timeCycleLength.set("Spin duration (ms)", 8000, 0, 20000));
-	paramsChecker.add(timeCycleOffset.set("Spin offset (ms)", 0, 0, 20000));
-	paramsChecker.add(beatCycleLength.set("Beat duration (ms)", 2000, 0, 20000));
-	paramsChecker.add(beatCycleOffset.set("Beat offset (ms)", 0, 0, 20000));
+	paramsChecker.add(checkerEnabled.set("Enabled", false));
+	paramsChecker.add(checkerOutside.set("Paint outside users", true));
+	paramsChecker.add(checkerRPM.set("RPM", 3.0, 0.0, 25.0));
+	paramsChecker.add(checkerRevolutionOffset.set("Rev offset", 0.0, 0.0, 2.0));
+	paramsChecker.add(checkerBPM.set("BPM", 130.0, 0.0, 200.0));
+	paramsChecker.add(checkerBeatOffset.set("Beat offset", 0.0, 0.0, 2.0));
+	paramsChecker.add(checkerAmplitude.set("Amplitude", 0.0, 0.0, 5.0));
 
 	gui.setup();
 	gui.add(paramsLayers);
@@ -135,12 +137,13 @@ void ofApp::draw(){
 		if (showThreshold) usermask.end();
 	}
 
-	if (showChecker) {
+	if (checkerEnabled) {
 		checker.begin();
-		checker.setUniform1f("outside", 1.0);
-		checker.setUniform1f("timeCycle", cycle(timeCycleLength, timeCycleOffset));
-		checker.setUniform1f("beatCycle", cycle(beatCycleLength, beatCycleOffset));
+		checker.setUniform1f("outside", checkerOutside ? 1.0 : 0.0);
+		checker.setUniform1f("timeCycle", cyclePerMinute(checkerRPM, checkerRevolutionOffset));
+		checker.setUniform1f("beatCycle", cyclePerMinute(checkerBPM, checkerBeatOffset));
 		checker.setUniform1f("size", 10);
+		checker.setUniform1f("amplitude", checkerAmplitude);
 		checker.setUniform2f("resolution", (float)ofGetWidth(), (float)ofGetHeight());
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
 		glitchBuffer.draw(canvasSpace);
@@ -183,7 +186,7 @@ void ofApp::keyPressed(int key){
 		showThreshold = !showThreshold;
 		break;
 	case 'c':
-		showChecker = !showChecker;
+		checkerEnabled = !checkerEnabled;
 		break;
 	case 'r':
 		showRainbows = !showRainbows;
@@ -284,7 +287,16 @@ void ofApp::sizeCanvasSpace() {
 }
 
 float ofApp::cycle(size_t length, size_t offset) {
+	if (length == 0) return 0.0;
 	float fLength = (float)length;
-	float fCycle = (float)(ofGetElapsedTimeMillis() % length + offset);
+	float fCycle = (float)((ofGetElapsedTimeMillis() + offset) % length);
 	return fCycle / fLength;
+}
+
+float ofApp::cyclePerMinute(float rpm, float offset) {
+	if (rpm == 0.0) return 0.0;
+	float length = 60.0 * 1000.0 / rpm;
+	size_t offsetMillis = (size_t)(offset * 1000);
+	float fCycle = (float)((ofGetElapsedTimeMillis() + offsetMillis) % (size_t)length);
+	return fCycle / length;
 }

@@ -53,6 +53,7 @@ class ofApp : public ofBaseApp{
 		size_t beatCycle;
 		size_t beatOffset;
 		float cycle(size_t length, size_t offset);
+		float cyclePerMinute(float rpm, float offset);
 
 		bool needsResize;
 		void sizeCanvasSpace();
@@ -66,10 +67,12 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> levelsRainbow;
 		ofParameter<float> levelsThreshold;
 		ofParameterGroup paramsChecker;
-		ofParameter<bool> showChecker;
-		ofParameter<size_t> timeCycleLength;
-		ofParameter<size_t> timeCycleOffset;
-		ofParameter<size_t> beatCycleLength;
-		ofParameter<size_t> beatCycleOffset;
+		ofParameter<bool> checkerEnabled;
+		ofParameter<bool> checkerOutside;
+		ofParameter<float> checkerAmplitude;
+		ofParameter<float> checkerRPM;
+		ofParameter<float> checkerRevolutionOffset;
+		ofParameter<float> checkerBPM;
+		ofParameter<float> checkerBeatOffset;
 		ofxGuiGroup gui;
 };
