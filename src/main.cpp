@@ -9,8 +9,9 @@ int main(int argc, char *argv[]){
 	settings.height = 480;
 	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
 
-	settings.width = 300;
-	settings.height = 500;
+	settings.width = 250;
+	settings.height = 400;
+	//settings.decorated = false;
 	shared_ptr<ofAppBaseWindow> guiWindow = ofCreateWindow(settings);
 	guiWindow->setVerticalSync(false);
 
