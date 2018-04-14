@@ -8,6 +8,7 @@
 class ofApp : public ofBaseApp{
 
 	public:
+		ofApp(shared_ptr<ofAppBaseWindow> _mainWindow) : mainWindow(_mainWindow) {};
 		void parseArgs(int argc, char* argv[]);
 		void setup();
 		void update();
@@ -34,8 +35,9 @@ class ofApp : public ofBaseApp{
 		void keyPressedInGui(ofKeyEventArgs & args);
 
 	private:
+		shared_ptr<ofAppBaseWindow> mainWindow;
 		bool mirror = true;
-		bool fullscreen = false;
+		bool startFullscreen = false;
 		OniManager oni_manager;
 
 		ofRectangle canvasSpace;

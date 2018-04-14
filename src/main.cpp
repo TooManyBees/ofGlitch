@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
 	shared_ptr<ofAppBaseWindow> guiWindow = ofCreateWindow(settings);
 	guiWindow->setVerticalSync(false);
 
-	shared_ptr<ofApp> mainApp(new ofApp);
+	shared_ptr<ofApp> mainApp(new ofApp(mainWindow));
 	mainApp->parseArgs(argc, argv);
 	mainApp->setupGui();
 

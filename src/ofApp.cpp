@@ -3,7 +3,7 @@
 void ofApp::parseArgs(int argc, char* argv[]) {
 	for (int i = 0; i < argc; i++) {
 		if (strcmp(argv[i], "--fullscreen") == 0) {
-			fullscreen = true;
+			startFullscreen = true;
 		}
 		else if (strcmp(argv[i], "--no-mirror") == 0) {
 			mirror = false;
@@ -28,8 +28,8 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	mainWindow->setVerticalSync(true);
 	ofSetFrameRate(FPS);
-	ofSetVerticalSync(true);
 	if (oni_manager.setup(WIDTH, HEIGHT, FPS, mirror)) {
 		cout << "Setup device and streams.\n" << endl;
 	}
@@ -51,7 +51,7 @@ void ofApp::setup(){
 	checker.load("identity.vert", "check.frag");
 	beglitch.load("identity.vert", "beglitch.frag");
 
-	ofSetFullscreen(fullscreen);
+	mainWindow->setFullscreen(startFullscreen);
 	needsResize = true;
 }
 
@@ -144,7 +144,7 @@ void ofApp::draw(){
 		checker.setUniform1f("beatCycle", cyclePerMinute(checkerBPM, checkerBeatOffset));
 		checker.setUniform1f("size", 10);
 		checker.setUniform1f("amplitude", checkerAmplitude);
-		checker.setUniform2f("resolution", (float)ofGetWidth(), (float)ofGetHeight());
+		checker.setUniform2f("resolution", WIDTH, HEIGHT);
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
 		glitchBuffer.draw(canvasSpace);
 		checker.end();
@@ -173,8 +173,7 @@ void ofApp::keyPressed(int key){
 		// if ui window closed, reopen and reattach listeners
 		break;
 	case 'f':
-		fullscreen = !fullscreen;
-		ofSetFullscreen(fullscreen);
+		mainWindow->toggleFullscreen();
 		break;
 	case 'b':
 		showBuffer = !showBuffer;
