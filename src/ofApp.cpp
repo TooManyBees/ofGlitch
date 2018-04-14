@@ -71,9 +71,9 @@ void ofApp::setupGui() {
 	paramsChecker.add(checkerOutside.set("Paint outside users", true));
 	paramsChecker.add(checkerRPM.set("RPM", 3.0, 0.0, 25.0));
 	paramsChecker.add(checkerRevolutionOffset.set("Rev offset", 0.0, 0.0, 2.0));
+	paramsChecker.add(checkerAmplitude.set("Beat Amplitude", 0.0, 0.0, 5.0));
 	paramsChecker.add(checkerBPM.set("BPM", 130.0, 0.0, 200.0));
-	paramsChecker.add(checkerBeatOffset.set("Beat offset", 0.0, 0.0, 2.0));
-	paramsChecker.add(checkerAmplitude.set("Amplitude", 0.0, 0.0, 5.0));
+	paramsChecker.add(checkerBeatOffset.set("Beat offset", 0.0, 0.0, 10.0));
 
 	gui.setup();
 	gui.add(paramsLayers);
@@ -110,8 +110,6 @@ void ofApp::update(){
 	}
 	glitchBuffer.update();
 	oni_manager.getUserFrame(&userFrame);
-
-	//updateUi();
 
 	if (needsResize) sizeCanvasSpace();
 }
@@ -260,28 +258,8 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::sizeCanvasSpace() {
-	// Figure out where to draw the image on screen
-	float scaleWidthRatio = (float)ofGetWidth() / (float)WIDTH;
-	float scaleHeightRatio = (float)ofGetHeight() / (float)HEIGHT;
-	float posX, posY, scaleHeight, scaleWidth;
-	if (HEIGHT * scaleWidthRatio <= ofGetHeight()) {
-		// if scaling to max still fits the height
-		scaleWidth = ofGetWidth();
-		scaleHeight = HEIGHT * scaleWidthRatio;
-		posX = 0;
-		posY = (ofGetHeight() - scaleHeight) / 2;
-	}
-	else {
-		scaleWidth = WIDTH * scaleHeightRatio;
-		scaleHeight = ofGetHeight();
-		posX = (ofGetWidth() - scaleWidth) / 2;
-		posY = 0;
-	}
-	canvasSpace.x = posX;
-	canvasSpace.y = posY;
-	canvasSpace.width = scaleWidth;
-	canvasSpace.height = scaleHeight;
-	printf("Drawing at (%.2f, %.2f): %.2f x %.2f\n", canvasSpace.x, canvasSpace.y, canvasSpace.width, canvasSpace.height);
+	canvasSpace.scaleTo(ofGetWindowRect(), OF_SCALEMODE_FIT);
+	canvasSpace.alignTo(ofGetWindowRect(), OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
 	needsResize = false;
 }
 

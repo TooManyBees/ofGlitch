@@ -40,7 +40,7 @@ class ofApp : public ofBaseApp{
 		bool startFullscreen = false;
 		OniManager oni_manager;
 
-		ofRectangle canvasSpace;
+		ofRectangle canvasSpace = ofRectangle(0, 0, WIDTH, HEIGHT);
 
 		ofImage colorFrame;
 		ofImage depthFrame;
