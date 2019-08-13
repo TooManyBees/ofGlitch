@@ -62,6 +62,9 @@ class ofApp : public ofBaseApp{
 		bool needsResize;
 		void sizeCanvasSpace();
 
+		bool recording;
+		string recordingPath;
+
 		ofParameterGroup paramsLayers;
 		ofParameter<bool> showBuffer;
 		ofParameter<bool> showVideo;

@@ -85,6 +85,8 @@ void ofApp::setupGui() {
 #ifdef ENABLE_CHECKER
 	gui.add(paramsChecker);
 #endif
+
+	recording = false;
 }
 
 unsigned char mysteryDiff(unsigned char a, unsigned char b) {
@@ -166,6 +168,11 @@ void ofApp::draw(){
 		glitchBuffer.draw(canvasSpace);
 		beglitch.end();
 	}
+
+	if (recording) {
+		string recordingFilename = ofFilePath::join(recordingPath, ofToString(ofGetFrameNum()) + ".bmp");
+		ofSaveScreen(recordingFilename);
+	}
 }
 
 void ofApp::drawGui(ofEventArgs & args) {
@@ -209,6 +216,16 @@ void ofApp::keyPressed(int key){
 		break;
 	case OF_KEY_RIGHT:
 		levelsThreshold -= 0.025;
+		break;
+	case OF_KEY_RETURN:
+		if (recording) {
+			recording = false;
+		} else {
+			string timestamp = ofGetTimestampString("%F_%H-%M-%S");
+			recordingPath = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
+			ofFilePath::createEnclosingDirectory(recordingPath);
+			recording = true;
+		}
 		break;
 	}
 }
