@@ -48,7 +48,9 @@ class ofApp : public ofBaseApp{
 		ofImage glitchBuffer;
 
 		ofShader beglitch;
+#ifdef ENABLE_CHECKER
 		ofShader checker;
+#endif
 		ofShader usermask;
 		size_t timeCycle;
 		size_t timeOffset;
@@ -68,6 +70,7 @@ class ofApp : public ofBaseApp{
 		ofParameterGroup paramsLevels;
 		ofParameter<float> levelsRainbow;
 		ofParameter<float> levelsThreshold;
+#ifdef ENABLE_CHECKER
 		ofParameterGroup paramsChecker;
 		ofParameter<bool> checkerEnabled;
 		ofParameter<bool> checkerOutside;
@@ -76,5 +79,6 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> checkerRevolutionOffset;
 		ofParameter<float> checkerBPM;
 		ofParameter<float> checkerBeatOffset;
+#endif
 		ofxGuiGroup gui;
 };

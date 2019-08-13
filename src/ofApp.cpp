@@ -48,7 +48,9 @@ void ofApp::setup(){
 	userFrame.setColor(0);
 
 	usermask.load("identity.vert", "usermask.frag");
+#ifdef ENABLE_CHECKER
 	checker.load("identity.vert", "check.frag");
+#endif
 	beglitch.load("identity.vert", "beglitch.frag");
 
 	mainWindow->setFullscreen(startFullscreen);
@@ -66,6 +68,7 @@ void ofApp::setupGui() {
 	paramsLevels.add(levelsRainbow.set("Rainbows", 0.6, 0.0, 1.0));
 	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));
 
+#ifdef ENABLE_CHECKER
 	paramsChecker.setName("Checker pattern");
 	paramsChecker.add(checkerEnabled.set("Enabled", false));
 	paramsChecker.add(checkerOutside.set("Paint outside users", true));
@@ -74,11 +77,14 @@ void ofApp::setupGui() {
 	paramsChecker.add(checkerAmplitude.set("Beat Amplitude", 0.0, 0.0, 5.0));
 	paramsChecker.add(checkerBPM.set("BPM", 130.0, 0.0, 200.0));
 	paramsChecker.add(checkerBeatOffset.set("Beat offset", 0.0, 0.0, 10.0));
+#endif
 
 	gui.setup();
 	gui.add(paramsLayers);
 	gui.add(paramsLevels);
+#ifdef ENABLE_CHECKER
 	gui.add(paramsChecker);
+#endif
 }
 
 unsigned char mysteryDiff(unsigned char a, unsigned char b) {
@@ -135,6 +141,7 @@ void ofApp::draw(){
 		if (showThreshold) usermask.end();
 	}
 
+#ifdef ENABLE_CHECKER
 	if (checkerEnabled) {
 		checker.begin();
 		checker.setUniform1f("outside", checkerOutside ? 1.0 : 0.0);
@@ -147,6 +154,7 @@ void ofApp::draw(){
 		glitchBuffer.draw(canvasSpace);
 		checker.end();
 	}
+#endif
 
 	// Draw the glitch!
 	if (showRainbows) {
@@ -182,9 +190,11 @@ void ofApp::keyPressed(int key){
 	case 't':
 		showThreshold = !showThreshold;
 		break;
+#ifdef ENABLE_CHECKER
 	case 'c':
 		checkerEnabled = !checkerEnabled;
 		break;
+#endif
 	case 'r':
 		showRainbows = !showRainbows;
 		break;
