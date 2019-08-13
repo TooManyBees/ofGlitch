@@ -7,11 +7,21 @@ int main(int argc, char *argv[]){
 	settings.setGLVersion(3, 2);
 	settings.width = 640;
 	settings.height = 480;
-	ofCreateWindow(settings);
-	// this kicks off the running of my app
-	// can be OF_WINDOW or OF_FULLSCREEN
-	// pass in width and height too:
-	ofApp* app = new ofApp();
-	app->parseArgs(argc, argv);
-	ofRunApp(app);
+	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
+
+	settings.width = 250;
+	settings.height = 400;
+	//settings.decorated = false;
+	shared_ptr<ofAppBaseWindow> guiWindow = ofCreateWindow(settings);
+	guiWindow->setVerticalSync(false);
+
+	shared_ptr<ofApp> mainApp(new ofApp(mainWindow));
+	mainApp->parseArgs(argc, argv);
+	mainApp->setupGui();
+
+	ofAddListener(guiWindow->events().draw, mainApp.get(), &ofApp::drawGui);
+	ofAddListener(guiWindow->events().keyPressed, mainApp.get(), &ofApp::keyPressedInGui);
+
+	ofRunApp(mainWindow, mainApp);
+	ofRunMainLoop();
 }

@@ -3,11 +3,12 @@
 #include "ofMain.h"
 #include "openni.h"
 #include "OniManager.h"
-#include "toggle.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
 	public:
+		ofApp(shared_ptr<ofAppBaseWindow> _mainWindow) : mainWindow(_mainWindow) {};
 		void parseArgs(int argc, char* argv[]);
 		void setup();
 		void update();
@@ -29,12 +30,17 @@ class ofApp : public ofBaseApp{
 		static const int HEIGHT = 480;
 		static const int FPS = 30;
 
+		void setupGui();
+		void drawGui(ofEventArgs & args);
+		void keyPressedInGui(ofKeyEventArgs & args);
+
 	private:
+		shared_ptr<ofAppBaseWindow> mainWindow;
 		bool mirror = true;
-		bool fullscreen = false;
+		bool startFullscreen = false;
 		OniManager oni_manager;
 
-		ofRectangle canvasSpace;
+		ofRectangle canvasSpace = ofRectangle(0, 0, WIDTH, HEIGHT);
 
 		ofImage colorFrame;
 		ofImage depthFrame;
@@ -42,30 +48,40 @@ class ofApp : public ofBaseApp{
 		ofImage glitchBuffer;
 
 		ofShader beglitch;
+#ifdef ENABLE_CHECKER
 		ofShader checker;
+#endif
 		ofShader usermask;
 		size_t timeCycle;
 		size_t timeOffset;
 		size_t beatCycle;
 		size_t beatOffset;
 		float cycle(size_t length, size_t offset);
+		float cyclePerMinute(float rpm, float offset);
 
 		bool needsResize;
 		void sizeCanvasSpace();
 
-		bool displayUi = false;
-		ofTrueTypeFont uiFont;
-		ofTrueTypeFont statsFont;
-		char statsString[30];
-		float videoThreshold;
-		float rainbowThreshold;
-		Toggle* toggleBuffer;
-		Toggle* toggleVideo;
-		Toggle* toggleThreshold;
-		Toggle* togglePattern;
-		Toggle* toggleRainbows;
-		vector<Toggle*> ui;
+		bool recording;
+		string recordingPath;
 
-		void updateUi();
-		void drawUi();
+		ofParameterGroup paramsLayers;
+		ofParameter<bool> showBuffer;
+		ofParameter<bool> showVideo;
+		ofParameter<bool> showThreshold;
+		ofParameter<bool> showRainbows;
+		ofParameterGroup paramsLevels;
+		ofParameter<float> levelsRainbow;
+		ofParameter<float> levelsThreshold;
+#ifdef ENABLE_CHECKER
+		ofParameterGroup paramsChecker;
+		ofParameter<bool> checkerEnabled;
+		ofParameter<bool> checkerOutside;
+		ofParameter<float> checkerAmplitude;
+		ofParameter<float> checkerRPM;
+		ofParameter<float> checkerRevolutionOffset;
+		ofParameter<float> checkerBPM;
+		ofParameter<float> checkerBeatOffset;
+#endif
+		ofxGuiGroup gui;
 };

@@ -3,7 +3,7 @@
 void ofApp::parseArgs(int argc, char* argv[]) {
 	for (int i = 0; i < argc; i++) {
 		if (strcmp(argv[i], "--fullscreen") == 0) {
-			fullscreen = true;
+			startFullscreen = true;
 		}
 		else if (strcmp(argv[i], "--no-mirror") == 0) {
 			mirror = false;
@@ -28,8 +28,8 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	mainWindow->setVerticalSync(true);
 	ofSetFrameRate(FPS);
-	ofSetVerticalSync(true);
 	if (oni_manager.setup(WIDTH, HEIGHT, FPS, mirror)) {
 		cout << "Setup device and streams.\n" << endl;
 	}
@@ -48,37 +48,45 @@ void ofApp::setup(){
 	userFrame.setColor(0);
 
 	usermask.load("identity.vert", "usermask.frag");
+#ifdef ENABLE_CHECKER
 	checker.load("identity.vert", "check.frag");
+#endif
 	beglitch.load("identity.vert", "beglitch.frag");
 
-	uiFont.load("AnonymousProBold.ttf", 18) || uiFont.load(OF_TTF_MONO, 18);
-	statsFont.load("AnonymousPro.ttf", 12) || statsFont.load(OF_TTF_MONO, 12);
-	if (!uiFont.isLoaded() || !statsFont.isLoaded()) {
-		cerr << "Couldn't load fonts." << endl;
-		return std::exit(1);
-	}
-
-	toggleBuffer = new Toggle("B", 'b', "draw buffer", ofPoint(10, 10), &uiFont);
-	toggleVideo = new Toggle("V", 'v', "draw video", ofPoint(10, 35), &uiFont, true);
-	toggleThreshold = new Toggle("T", 't', "threshold video", ofPoint(10, 60), &uiFont, true);
-	togglePattern = new Toggle("P", 'p', "pattern", ofPoint(10, 85), &uiFont);
-	toggleRainbows = new Toggle("R", 'r', "rainbows", ofPoint(10, 110), &uiFont, true);
-
-	ui.push_back(toggleBuffer);
-	ui.push_back(toggleVideo);
-	ui.push_back(toggleThreshold);
-	ui.push_back(togglePattern);
-	ui.push_back(toggleRainbows);
-
-	ofSetFullscreen(fullscreen);
-	videoThreshold = 0.35;
-	rainbowThreshold = 0.6;
+	mainWindow->setFullscreen(startFullscreen);
 	needsResize = true;
+}
 
-	timeCycle = 8000;
-	timeOffset = 0;
-	beatCycle = 2000;
-	timeOffset = 0;
+void ofApp::setupGui() {
+	paramsLayers.setName("Layers");
+	paramsLayers.add(showBuffer.set("Show buffer", false));
+	paramsLayers.add(showVideo.set("Show video", true));
+	paramsLayers.add(showThreshold.set("Threshold video", true));
+	paramsLayers.add(showRainbows.set("Show Rainbows", true));
+
+	paramsLevels.setName("Levels");
+	paramsLevels.add(levelsRainbow.set("Rainbows", 0.6, 0.0, 1.0));
+	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));
+
+#ifdef ENABLE_CHECKER
+	paramsChecker.setName("Checker pattern");
+	paramsChecker.add(checkerEnabled.set("Enabled", false));
+	paramsChecker.add(checkerOutside.set("Paint outside users", true));
+	paramsChecker.add(checkerRPM.set("RPM", 3.0, 0.0, 25.0));
+	paramsChecker.add(checkerRevolutionOffset.set("Rev offset", 0.0, 0.0, 2.0));
+	paramsChecker.add(checkerAmplitude.set("Beat Amplitude", 0.0, 0.0, 5.0));
+	paramsChecker.add(checkerBPM.set("BPM", 130.0, 0.0, 200.0));
+	paramsChecker.add(checkerBeatOffset.set("Beat offset", 0.0, 0.0, 10.0));
+#endif
+
+	gui.setup();
+	gui.add(paramsLayers);
+	gui.add(paramsLevels);
+#ifdef ENABLE_CHECKER
+	gui.add(paramsChecker);
+#endif
+
+	recording = false;
 }
 
 unsigned char mysteryDiff(unsigned char a, unsigned char b) {
@@ -111,49 +119,49 @@ void ofApp::update(){
 	glitchBuffer.update();
 	oni_manager.getUserFrame(&userFrame);
 
-	updateUi();
-
 	if (needsResize) sizeCanvasSpace();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	if (toggleBuffer->isOn()) {
+	if (showBuffer) {
 		ofSetColor(255);
 		glitchBuffer.draw(canvasSpace);
-		if (displayUi) drawUi();
 		return;
 	}
 
 	ofBackground(0);
 
-	if (toggleVideo->isOn()) {
+	if (showVideo) {
 		// Draw the color frame, optionally masked and thresholded
-		if (toggleThreshold->isOn()) {
+		if (showThreshold) {
 			usermask.begin();
 			usermask.setUniformTexture("usermask", userFrame.getTexture(), 1);
-			usermask.setUniform1f("threshold", videoThreshold);
+			usermask.setUniform1f("threshold", levelsThreshold);
 		}
 		colorFrame.draw(canvasSpace);
-		if (toggleThreshold->isOn()) usermask.end();
+		if (showThreshold) usermask.end();
 	}
 
-	if (togglePattern->isOn()) {
+#ifdef ENABLE_CHECKER
+	if (checkerEnabled) {
 		checker.begin();
-		checker.setUniform1f("outside", 1.0);
-		checker.setUniform1f("timeCycle", cycle(timeCycle, timeOffset));
-		checker.setUniform1f("beatCycle", cycle(beatCycle, beatOffset));
+		checker.setUniform1f("outside", checkerOutside ? 1.0 : 0.0);
+		checker.setUniform1f("timeCycle", cyclePerMinute(checkerRPM, checkerRevolutionOffset));
+		checker.setUniform1f("beatCycle", cyclePerMinute(checkerBPM, checkerBeatOffset));
 		checker.setUniform1f("size", 10);
-		checker.setUniform2f("resolution", (float)ofGetWidth(), (float)ofGetHeight());
+		checker.setUniform1f("amplitude", checkerAmplitude);
+		checker.setUniform2f("resolution", WIDTH, HEIGHT);
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
 		glitchBuffer.draw(canvasSpace);
 		checker.end();
 	}
+#endif
 
 	// Draw the glitch!
-	if (toggleRainbows->isOn()) {
+	if (showRainbows) {
 		beglitch.begin();
-		beglitch.setUniform1f("threshold", rainbowThreshold);
+		beglitch.setUniform1f("threshold", levelsRainbow);
 		ofFloatColor color;
 		color.setHsb(ofRandom(1.0), 1.0, 1.0);
 		beglitch.setUniform3f("color", color.r, color.g, color.b);
@@ -161,54 +169,69 @@ void ofApp::draw(){
 		beglitch.end();
 	}
 
-	if (displayUi) drawUi();
-}
-
-void ofApp::updateUi() {
-	toggleVideo->enableThisFrame(!toggleBuffer->isOn());
-	toggleThreshold->enableThisFrame(toggleVideo->isOn());
-	toggleRainbows->enableThisFrame(!toggleBuffer->isOn());
-}
-
-void ofApp::drawUi() {
-	for (Toggle* elem : ui) {
-		elem->draw();
+	if (recording) {
+		string recordingFilename = ofFilePath::join(recordingPath, ofToString(ofGetFrameNum()) + ".bmp");
+		ofSaveScreen(recordingFilename);
 	}
-	ofSetColor(255);
-	sprintf(statsString, "Rainbows: %.2f\nFaces: %.2f", rainbowThreshold, videoThreshold);
-	statsFont.drawString(statsString, 5.0, ofGetHeight() - statsFont.stringHeight(statsString));
+}
+
+void ofApp::drawGui(ofEventArgs & args) {
+	gui.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	switch (key) {
 	case 'u':
-		displayUi = !displayUi;
+		// if ui window closed, reopen and reattach listeners
 		break;
 	case 'f':
-		fullscreen = !fullscreen;
-		ofSetFullscreen(fullscreen);
+		mainWindow->toggleFullscreen();
+		break;
+	case 'b':
+		showBuffer = !showBuffer;
+		break;
+	case 'v':
+		showVideo = !showVideo;
+		break;
+	case 't':
+		showThreshold = !showThreshold;
+		break;
+#ifdef ENABLE_CHECKER
+	case 'c':
+		checkerEnabled = !checkerEnabled;
+		break;
+#endif
+	case 'r':
+		showRainbows = !showRainbows;
 		break;
 	case OF_KEY_UP:
-		rainbowThreshold = ofClamp(rainbowThreshold - 0.05, 0.0, 1.0);
+		levelsRainbow -= 0.05;
 		break;
 	case OF_KEY_DOWN:
-		rainbowThreshold = ofClamp(rainbowThreshold + 0.05, 0.0, 1.0);
+		levelsRainbow += 0.05;
 		break;
 	case OF_KEY_LEFT:
-		videoThreshold = ofClamp(videoThreshold + 0.025, 0.0, 1.0);
+		levelsThreshold += 0.025;
 		break;
 	case OF_KEY_RIGHT:
-		videoThreshold = ofClamp(videoThreshold - 0.025, 0.0, 1.0);
+		levelsThreshold -= 0.025;
 		break;
-	default:
-		for (Toggle* elem : ui) {
-			if (elem->wasPressed(key)) {
-				elem->click();
-				return;
-			}
+	case OF_KEY_RETURN:
+		if (recording) {
+			recording = false;
+		} else {
+			string timestamp = ofGetTimestampString("%F_%H-%M-%S");
+			recordingPath = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
+			ofFilePath::createEnclosingDirectory(recordingPath);
+			recording = true;
 		}
+		break;
 	}
+}
+
+void ofApp::keyPressedInGui(ofKeyEventArgs & args) {
+	keyPressed(args.key);
 }
 
 //--------------------------------------------------------------
@@ -228,12 +251,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	for (Toggle* elem : ui) {
-		if (elem->wasClicked(x, y)) {
-			elem->click();
-			return;
-		}
-	}
+
 }
 
 //--------------------------------------------------------------
@@ -267,33 +285,22 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::sizeCanvasSpace() {
-	// Figure out where to draw the image on screen
-	float scaleWidthRatio = (float)ofGetWidth() / (float)WIDTH;
-	float scaleHeightRatio = (float)ofGetHeight() / (float)HEIGHT;
-	float posX, posY, scaleHeight, scaleWidth;
-	if (HEIGHT * scaleWidthRatio <= ofGetHeight()) {
-		// if scaling to max still fits the height
-		scaleWidth = ofGetWidth();
-		scaleHeight = HEIGHT * scaleWidthRatio;
-		posX = 0;
-		posY = (ofGetHeight() - scaleHeight) / 2;
-	}
-	else {
-		scaleWidth = WIDTH * scaleHeightRatio;
-		scaleHeight = ofGetHeight();
-		posX = (ofGetWidth() - scaleWidth) / 2;
-		posY = 0;
-	}
-	canvasSpace.x = posX;
-	canvasSpace.y = posY;
-	canvasSpace.width = scaleWidth;
-	canvasSpace.height = scaleHeight;
-	printf("Drawing at (%.2f, %.2f): %.2f x %.2f\n", canvasSpace.x, canvasSpace.y, canvasSpace.width, canvasSpace.height);
+	canvasSpace.scaleTo(ofGetWindowRect(), OF_SCALEMODE_FIT);
+	canvasSpace.alignTo(ofGetWindowRect(), OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
 	needsResize = false;
 }
 
 float ofApp::cycle(size_t length, size_t offset) {
+	if (length == 0) return 0.0;
 	float fLength = (float)length;
-	float fCycle = (float)(ofGetElapsedTimeMillis() % length + offset);
+	float fCycle = (float)((ofGetElapsedTimeMillis() + offset) % length);
 	return fCycle / fLength;
+}
+
+float ofApp::cyclePerMinute(float rpm, float offset) {
+	if (rpm == 0.0) return 0.0;
+	float length = 60.0 * 1000.0 / rpm;
+	size_t offsetMillis = (size_t)(offset * 1000);
+	float fCycle = (float)((ofGetElapsedTimeMillis() + offsetMillis) % (size_t)length);
+	return fCycle / length;
 }
