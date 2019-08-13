@@ -18,8 +18,8 @@ ARM processors.
 
 Copy three external files/folders into the project's `bin` folder:
 
-* `OpenNI2.dll` from `$openni2_location/Redist`
-* `NiTE2.dll` from `$nite2_location/Redist`
+* `OpenNI2.dll` (or `libOpenNI2.dylib`, etc.) from `$openni2_location/Redist`
+* `NiTE2.dll` (or `libNiTE2.dylib`, etc.) from `$nite2_location/Redist`
 * the `NiTE2` folder from `$nite2_location/Redist/NiTE2`
 
 ## Usage
