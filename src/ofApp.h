@@ -4,6 +4,7 @@
 #include "openni.h"
 #include "OniManager.h"
 #include "ofxGui.h"
+#include "saver.h"
 
 class ofApp : public ofBaseApp{
 
@@ -64,6 +65,7 @@ class ofApp : public ofBaseApp{
 
 		bool recording;
 		string recordingPath;
+		Saver* imgSaver;
 
 		ofParameterGroup paramsLayers;
 		ofParameter<bool> showBuffer;
