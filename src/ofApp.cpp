@@ -173,6 +173,7 @@ void ofApp::draw(){
 		// string recordingFilename = ofFilePath::join(recordingPath, ofToString(ofGetFrameNum()) + ".bmp");
 		// ofSaveScreen(recordingFilename);
 		ofImage* img = new ofImage;
+		img->setUseTexture(false);
 		img->allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR);
 		img->grabScreen(0, 0, WIDTH, HEIGHT);
 		imgSaver->push(img, ofGetFrameNum());
@@ -230,7 +231,7 @@ void ofApp::keyPressed(int key){
 			string timestamp = ofGetTimestampString("%F_%H-%M-%S");
 			string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
 			ofFilePath::createEnclosingDirectory(path);
-			imgSaver = new Saver(path);
+			imgSaver = new AsyncImageSaver(path);
 			recording = true;
 		}
 		break;
