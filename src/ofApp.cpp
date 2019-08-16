@@ -47,6 +47,8 @@ void ofApp::setup(){
 	userFrame.allocate(WIDTH, HEIGHT, OF_IMAGE_GRAYSCALE);
 	userFrame.setColor(0);
 
+	canvas.allocate(WIDTH, HEIGHT, GL_RGBA);
+
 	usermask.load("identity.vert", "usermask.frag");
 #ifdef ENABLE_CHECKER
 	checker.load("identity.vert", "check.frag");
@@ -55,6 +57,7 @@ void ofApp::setup(){
 
 	mainWindow->setFullscreen(startFullscreen);
 	needsResize = true;
+	ofBackground(0);
 }
 
 void ofApp::setupGui() {
@@ -119,18 +122,18 @@ void ofApp::update(){
 	glitchBuffer.update();
 	oni_manager.getUserFrame(&userFrame);
 
-	if (needsResize) sizeCanvasSpace();
+	if (needsResize) sizeProjectionSpace();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	canvas.begin();
+	ofClear(0);
 	if (showBuffer) {
 		ofSetColor(255);
 		glitchBuffer.draw(canvasSpace);
 		return;
 	}
-
-	ofBackground(0);
 
 	if (showVideo) {
 		// Draw the color frame, optionally masked and thresholded
@@ -170,13 +173,20 @@ void ofApp::draw(){
 	}
 
 	if (recording) {
-		// string recordingFilename = ofFilePath::join(recordingPath, ofToString(ofGetFrameNum()) + ".bmp");
-		// ofSaveScreen(recordingFilename);
 		ofImage* img = new ofImage;
 		img->setUseTexture(false);
 		img->allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR);
-		img->grabScreen(0, 0, WIDTH, HEIGHT);
+		canvas.readToPixels(img->getPixelsRef());
 		imgSaver->push(img, ofGetFrameNum());
+	}
+	canvas.end();
+
+	canvas.draw(projectionSpace);
+
+	if (recording) {
+		ofSetColor(255, 0, 0);
+		ofDrawCircle(20, 20, 5);
+		ofSetColor(255);
 	}
 }
 
@@ -292,12 +302,13 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
-void ofApp::sizeCanvasSpace() {
-	canvasSpace.scaleTo(ofGetWindowRect(), OF_SCALEMODE_FIT);
-	canvasSpace.alignTo(ofGetWindowRect(), OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
+void ofApp::sizeProjectionSpace() {
+	projectionSpace.scaleTo(ofGetWindowRect(), OF_SCALEMODE_FIT);
+	projectionSpace.alignTo(ofGetWindowRect(), OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
 	needsResize = false;
 }
 
+#ifdef ENABLE_CHECKER
 float ofApp::cycle(size_t length, size_t offset) {
 	if (length == 0) return 0.0;
 	float fLength = (float)length;
@@ -312,3 +323,4 @@ float ofApp::cyclePerMinute(float rpm, float offset) {
 	float fCycle = (float)((ofGetElapsedTimeMillis() + offsetMillis) % (size_t)length);
 	return fCycle / length;
 }
+#endif
