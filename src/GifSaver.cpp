@@ -25,7 +25,6 @@ void processFrame(unsigned char* frame, unsigned int width, unsigned int height,
 	FreeImage_AppendPage(multi, quantizedBitmap);
 	if (bitmap != NULL) FreeImage_Unload(bitmap);
 	if (quantizedBitmap != NULL) FreeImage_Unload(quantizedBitmap);
-	delete frame;
 }
 
 void asyncSave(vector<ofPixels*>* frames, unsigned int width, unsigned int height, string path) {
@@ -34,7 +33,9 @@ void asyncSave(vector<ofPixels*>* frames, unsigned int width, unsigned int heigh
 	FIMULTIBITMAP *multi = FreeImage_OpenMultiBitmap(FIF_GIF, ppath.c_str(), TRUE, FALSE);
 	for (auto frame : *frames) {
 		processFrame(frame->getData(), width, height, multi);
+		delete frame;
 	}
+	delete frames;
 
 	FreeImage_CloseMultiBitmap(multi);
 }

@@ -10,6 +10,9 @@ public:
 	};
 	~GifSaver() {
 		if (!detached) {
+			for (auto frame : *frames) {
+				delete frame;
+			}
 			delete frames;
 		}
 	}
