@@ -173,11 +173,18 @@ void ofApp::draw(){
 	}
 
 	if (recording) {
+#ifdef GIFS
+		ofPixels* pixels = new ofPixels;
+		pixels->allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR_ALPHA);
+		canvas.readToPixels(*pixels);
+		imgSaver->push(pixels);
+#else
 		ofImage* img = new ofImage;
 		img->setUseTexture(false);
 		img->allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR);
 		canvas.readToPixels(img->getPixelsRef());
 		imgSaver->push(img, ofGetFrameNum());
+#endif	
 	}
 	canvas.end();
 
@@ -238,10 +245,16 @@ void ofApp::keyPressed(int key){
 			delete imgSaver;
 			recording = false;
 		} else {
+#ifdef GIFS
+			string filename = ofGetTimestampString("%F_%H-%M-%S.gif");
+			string path = ofFilePath::join("screenshots", filename);
+			imgSaver = new GifSaver(WIDTH, HEIGHT, path);
+#else
 			string timestamp = ofGetTimestampString("%F_%H-%M-%S");
 			string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
 			ofFilePath::createEnclosingDirectory(path);
 			imgSaver = new AsyncImageSaver(path);
+#endif
 			recording = true;
 		}
 		break;

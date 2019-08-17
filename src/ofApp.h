@@ -5,6 +5,7 @@
 #include "OniManager.h"
 #include "ofxGui.h"
 #include "AsyncImageSaver.h"
+#include "GifSaver.h"
 
 class ofApp : public ofBaseApp{
 
@@ -67,7 +68,11 @@ class ofApp : public ofBaseApp{
 
 		bool recording;
 		string recordingPath;
+#ifdef GIFS
+		GifSaver* imgSaver;
+#else
 		AsyncImageSaver* imgSaver;
+#endif
 
 		ofParameterGroup paramsLayers;
 		ofParameter<bool> showBuffer;
