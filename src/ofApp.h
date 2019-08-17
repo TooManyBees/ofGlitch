@@ -4,6 +4,7 @@
 #include "openni.h"
 #include "OniManager.h"
 #include "ofxGui.h"
+#include "AsyncImageSaver.h"
 
 class ofApp : public ofBaseApp{
 
@@ -40,7 +41,9 @@ class ofApp : public ofBaseApp{
 		bool startFullscreen = false;
 		OniManager oni_manager;
 
+		ofFbo canvas;
 		ofRectangle canvasSpace = ofRectangle(0, 0, WIDTH, HEIGHT);
+		ofRectangle projectionSpace = ofRectangle(0, 0, WIDTH, HEIGHT);
 
 		ofImage colorFrame;
 		ofImage depthFrame;
@@ -60,10 +63,11 @@ class ofApp : public ofBaseApp{
 		float cyclePerMinute(float rpm, float offset);
 
 		bool needsResize;
-		void sizeCanvasSpace();
+		void sizeProjectionSpace();
 
 		bool recording;
 		string recordingPath;
+		AsyncImageSaver* imgSaver;
 
 		ofParameterGroup paramsLayers;
 		ofParameter<bool> showBuffer;
