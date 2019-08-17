@@ -74,7 +74,6 @@ class ofApp : public ofBaseApp{
 		AsyncImageSaver* imgSaver;
 #endif
 
-
 		ofParameterGroup paramsLayers;
 		ofParameter<bool> showBuffer;
 		ofParameter<bool> showVideo;

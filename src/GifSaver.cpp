@@ -4,6 +4,11 @@ void GifSaver::push(ofPixels* pixels) {
 	frames->push_back(pixels);
 }
 
+/*
+	FreeImage multiframe gif encoding taken from https://github.com/jesusgollonet/ofxGifEncoder,
+	simplified for a more specific use case.
+*/
+
 void processFrame(unsigned char* frame, unsigned int width, unsigned int height, FIMULTIBITMAP *multi) {
 	// FIXME: I'm ignoring the whole little-endian bs because this is just for my own hardware
 	FIBITMAP* bitmap = FreeImage_ConvertFromRawBits(frame, width, height, width * 4, 32, 0, 0, 0, true);
@@ -28,9 +33,7 @@ void processFrame(unsigned char* frame, unsigned int width, unsigned int height,
 }
 
 void asyncSave(vector<ofPixels*>* frames, unsigned int width, unsigned int height, string path) {
-	string ppath = ofToDataPath(path);
-	cout << ppath << endl;
-	FIMULTIBITMAP *multi = FreeImage_OpenMultiBitmap(FIF_GIF, ppath.c_str(), TRUE, FALSE);
+	FIMULTIBITMAP *multi = FreeImage_OpenMultiBitmap(FIF_GIF, ofToDataPath(path).c_str(), TRUE, FALSE);
 	for (auto frame : *frames) {
 		processFrame(frame->getData(), width, height, multi);
 		delete frame;
