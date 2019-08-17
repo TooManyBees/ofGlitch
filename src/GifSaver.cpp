@@ -1,4 +1,4 @@
-#include "GifSaver.h";
+#include "GifSaver.h"
 
 void GifSaver::push(ofPixels* pixels) {
 	frames->push_back(pixels);
