@@ -37,6 +37,9 @@
     <ClCompile Include="src\AsyncImageSaver.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\GifSaver.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -90,6 +93,9 @@
       <Filter>addons\ofxGui\src</Filter>
     </ClInclude>
     <ClInclude Include="src\AsyncImageSaver.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GifSaver.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
