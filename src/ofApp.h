@@ -68,11 +68,15 @@ class ofApp : public ofBaseApp{
 
 		bool recording;
 		string recordingPath;
+		static const unsigned int MAX_RECORDING_FRAMES = 20 * FPS;
+		unsigned int numRecordingFrames = 0;
 #ifdef GIFS
 		GifSaver* imgSaver;
 #else
 		AsyncImageSaver* imgSaver;
 #endif
+		void startRecording();
+		void endRecording();
 
 		ofParameterGroup paramsLayers;
 		ofParameter<bool> showBuffer;

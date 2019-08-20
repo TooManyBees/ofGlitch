@@ -123,6 +123,13 @@ void ofApp::update(){
 	oni_manager.getUserFrame(&userFrame);
 
 	if (needsResize) sizeProjectionSpace();
+
+	if (recording) {
+		numRecordingFrames += 1;
+		if (numRecordingFrames > MAX_RECORDING_FRAMES) {
+			endRecording();
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -184,7 +191,7 @@ void ofApp::draw(){
 		img->allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR);
 		canvas.readToPixels(img->getPixelsRef());
 		imgSaver->push(img, ofGetFrameNum());
-#endif	
+#endif
 	}
 	canvas.end();
 
@@ -195,6 +202,27 @@ void ofApp::draw(){
 		ofDrawCircle(20, 20, 5);
 		ofSetColor(255);
 	}
+}
+
+void ofApp::startRecording() {
+#ifdef GIFS
+	string filename = ofGetTimestampString("%F_%H-%M-%S.gif");
+	string path = ofFilePath::join("screenshots", filename);
+	imgSaver = new GifSaver(WIDTH, HEIGHT, path);
+#else
+	string timestamp = ofGetTimestampString("%F_%H-%M-%S");
+	string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
+	ofFilePath::createEnclosingDirectory(path);
+	imgSaver = new AsyncImageSaver(path);
+#endif
+	recording = true;
+}
+
+void ofApp::endRecording() {
+	imgSaver->save();
+	delete imgSaver;
+	recording = false;
+	numRecordingFrames = 0;
 }
 
 void ofApp::drawGui(ofEventArgs & args) {
@@ -241,21 +269,9 @@ void ofApp::keyPressed(int key){
 		break;
 	case OF_KEY_RETURN:
 		if (recording) {
-			imgSaver->save();
-			delete imgSaver;
-			recording = false;
+			endRecording();
 		} else {
-#ifdef GIFS
-			string filename = ofGetTimestampString("%F_%H-%M-%S.gif");
-			string path = ofFilePath::join("screenshots", filename);
-			imgSaver = new GifSaver(WIDTH, HEIGHT, path);
-#else
-			string timestamp = ofGetTimestampString("%F_%H-%M-%S");
-			string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
-			ofFilePath::createEnclosingDirectory(path);
-			imgSaver = new AsyncImageSaver(path);
-#endif
-			recording = true;
+			startRecording();
 		}
 		break;
 	}
