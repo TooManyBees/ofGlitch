@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4059F9AA230C58F50058A075 /* GifSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4059F9A9230C58F50058A075 /* GifSaver.cpp */; };
 		409291CB2305FF7300A9A57E /* AsyncImageSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 409291CA2305FF7300A9A57E /* AsyncImageSaver.cpp */; };
 		40EFE99C2018D23D004D902E /* libNiTE2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40EFE99B2018D23D004D902E /* libNiTE2.dylib */; };
 		40EFE99E2018D24A004D902E /* libOpenNI2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40EFE99D2018D24A004D902E /* libOpenNI2.dylib */; };
@@ -54,6 +55,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4059F9A8230C58F50058A075 /* GifSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GifSaver.h; sourceTree = "<group>"; };
+		4059F9A9230C58F50058A075 /* GifSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GifSaver.cpp; sourceTree = "<group>"; };
 		409291C92305FAF400A9A57E /* AsyncImageSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageSaver.h; sourceTree = "<group>"; };
 		409291CA2305FF7300A9A57E /* AsyncImageSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncImageSaver.cpp; sourceTree = "<group>"; };
 		40EFE99B2018D23D004D902E /* libNiTE2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libNiTE2.dylib; path = bin/libNiTE2.dylib; sourceTree = "<group>"; };
@@ -158,6 +161,8 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				4059F9A9230C58F50058A075 /* GifSaver.cpp */,
+				4059F9A8230C58F50058A075 /* GifSaver.h */,
 				409291CA2305FF7300A9A57E /* AsyncImageSaver.cpp */,
 				409291C92305FAF400A9A57E /* AsyncImageSaver.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
@@ -268,6 +273,7 @@
 				40F04A3E20826E17008F6F7F /* ofxToggle.cpp in Sources */,
 				40F04A3D20826E17008F6F7F /* ofxSliderGroup.cpp in Sources */,
 				40F04A3720826E17008F6F7F /* ofxBaseGui.cpp in Sources */,
+				4059F9AA230C58F50058A075 /* GifSaver.cpp in Sources */,
 				40F04A3C20826E17008F6F7F /* ofxSlider.cpp in Sources */,
 				40F04A3920826E17008F6F7F /* ofxGuiGroup.cpp in Sources */,
 				40F04A3B20826E17008F6F7F /* ofxPanel.cpp in Sources */,
