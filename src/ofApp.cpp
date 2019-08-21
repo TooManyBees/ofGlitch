@@ -327,13 +327,16 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
 void ofApp::sizeProjectionSpace() {
-	projectionSpace.scaleTo(ofGetWindowRect(), OF_SCALEMODE_FIT);
-	projectionSpace.alignTo(ofGetWindowRect(), OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
+	ofRectangle window = ofGetWindowRect();
+	if (window.width > 0 && window.height > 0) {
+		projectionSpace.scaleTo(window, OF_SCALEMODE_FIT);
+		projectionSpace.alignTo(window, OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
+	}
 	needsResize = false;
 }
 
