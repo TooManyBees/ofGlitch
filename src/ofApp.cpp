@@ -8,6 +8,15 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 		else if (strcmp(argv[i], "--no-mirror") == 0) {
 			mirror = false;
 		}
+		else if (strcmp(argv[i], "--depth") == 0) {
+			if (i < argc-1 && strstr(argv[i+1], "-") == NULL) {
+				int parsed;
+				int result = sscanf(argv[i+1], "%d", &parsed);
+				if (result) {
+					backPlane = (float)min(10000, parsed);
+				}
+			}
+		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
 #ifdef WIN32
 			char* term = strrchr(argv[0], '\\');
@@ -18,6 +27,7 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 			cout << "Usage: " << term+1 << " [options]" << endl;
 			cout << "Options:" << endl;
 			cout << "--help, -h\tPrint this message and exit." << endl;
+			cout << "--depth N\tSet max depth to some value N lower than 10000." << endl;
 			cout << "--fullscreen\tStart application in full screen." << endl;
 			cout << "--no-mirror\tTurn off mirroring." << endl;
 			cout << "--vampire\tHack to make vampires appear on screen (may impact performance).";
@@ -30,7 +40,7 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 void ofApp::setup(){
 	mainWindow->setVerticalSync(true);
 	ofSetFrameRate(FPS);
-	if (oni_manager.setup(WIDTH, HEIGHT, FPS, mirror)) {
+	if (oni_manager.setup(WIDTH, HEIGHT, FPS, backPlane, mirror)) {
 		cout << "Setup device and streams.\n" << endl;
 	}
 	else {

@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
 		shared_ptr<ofAppBaseWindow> mainWindow;
 		bool mirror = true;
 		bool startFullscreen = false;
+		float backPlane = 10000;
 		OniManager oni_manager;
 
 		ofFbo canvas;

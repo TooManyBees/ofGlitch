@@ -10,7 +10,7 @@
 //	openni::OpenNI::shutdown();
 //}
 
-bool OniManager::setup(int w, int h, int fps, bool mirror) {
+bool OniManager::setup(int w, int h, int fps, float backPlane, bool mirror) {
 	//colorFrameTimestamp = 0;
 	//userFrameTimestamp = 0;
 
@@ -44,13 +44,14 @@ bool OniManager::setup(int w, int h, int fps, bool mirror) {
 	device.setImageRegistrationMode(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR);
 
 	pDepthMap = new unsigned char[w * h];
+	BACK_PLANE = backPlane;
 
 	return true;
 }
 
 void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's invoked, ugh */) {
 	userFrame.release(); // does this need a conditional?
-	
+
 	userTracker.readFrame(&userFrame);
 	if (!userFrame.isValid()) {
 		printf("err :(");
@@ -130,7 +131,7 @@ void OniManager::histogram(float *pHistogram, openni::VideoFrameRef& frame) {
 	unsigned int nNumberOfPoints = 0;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++, pDepth++) {
-			if (*pDepth != 0) {
+			if (*pDepth != 0 && *pDepth <= BACK_PLANE) {
 				pHistogram[*pDepth]++;
 				nNumberOfPoints++;
 			}
