@@ -136,9 +136,12 @@ void ofApp::update(){
 void ofApp::draw(){
 	canvas.begin();
 	ofClear(0);
+
 	if (showBuffer) {
 		ofSetColor(255);
 		glitchBuffer.draw(canvasSpace);
+		canvas.end();
+		canvas.draw(projectionSpace);
 		return;
 	}
 
