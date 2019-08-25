@@ -54,6 +54,8 @@ void ofApp::setup(){
 	glitchBuffer.allocate(WIDTH, HEIGHT, OF_IMAGE_GRAYSCALE);
 	glitchBuffer.setColor(0);
 
+	glitchFbo.allocate(WIDTH, HEIGHT, GL_RGBA);
+
 	userFrame.allocate(WIDTH, HEIGHT, OF_IMAGE_GRAYSCALE);
 	userFrame.setColor(0);
 
@@ -64,6 +66,7 @@ void ofApp::setup(){
 	checker.load("identity.vert", "check.frag");
 #endif
 	beglitch.load("identity.vert", "beglitch.frag");
+	englitch.load("identity.vert", "englitch.frag");
 
 	mainWindow->setFullscreen(startFullscreen);
 	needsResize = true;
@@ -123,13 +126,21 @@ void ofApp::update(){
 	oni_manager.getColorFrame(&colorFrame);
 	oni_manager.getDepthFrame(&depthFrame);
 
-	ofPixels & pGlitch = glitchBuffer.getPixels();
-	const ofPixels pDepth = depthFrame.getPixels();
-	for (int i = 0; i < WIDTH * HEIGHT; i++) {
-		unsigned char dd = mysteryDiff(pGlitch[i], pDepth[i]);
-		pGlitch[i] = dd;
-	}
-	glitchBuffer.update();
+	// ofPixels & pGlitch = glitchBuffer.getPixels();
+	// const ofPixels pDepth = depthFrame.getPixels();
+	// for (int i = 0; i < WIDTH * HEIGHT; i++) {
+	// 	unsigned char dd = mysteryDiff(pGlitch[i], pDepth[i]);
+	// 	pGlitch[i] = dd;
+	// }
+	// glitchBuffer.update();
+
+	englitch.begin();
+	englitch.setUniformTexture("glitchTex", glitchFbo.getTexture(), 1);
+	glitchFbo.begin();
+	depthFrame.draw(canvasSpace);
+	glitchFbo.end();
+	englitch.end();
+
 	oni_manager.getUserFrame(&userFrame);
 
 	if (needsResize) sizeProjectionSpace();
@@ -149,7 +160,8 @@ void ofApp::draw(){
 
 	if (showBuffer) {
 		ofSetColor(255);
-		glitchBuffer.draw(canvasSpace);
+		// glitchBuffer.draw(canvasSpace);
+		glitchFbo.draw(canvasSpace);
 		canvas.end();
 		canvas.draw(projectionSpace);
 		return;
