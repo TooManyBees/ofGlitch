@@ -51,7 +51,9 @@ class ofApp : public ofBaseApp{
 		ofImage depthFrame;
 		ofImage userFrame;
 		ofImage glitchBuffer;
+		ofFbo glitchFbo;
 
+		ofShader englitch;
 		ofShader beglitch;
 #ifdef ENABLE_CHECKER
 		ofShader checker;
