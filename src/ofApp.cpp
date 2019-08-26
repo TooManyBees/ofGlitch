@@ -51,11 +51,6 @@ void ofApp::setup(){
 	depthFrame.allocate(WIDTH, HEIGHT, OF_IMAGE_GRAYSCALE);
 	depthFrame.setColor(0);
 
-	glitchBuffer.allocate(WIDTH, HEIGHT, OF_IMAGE_GRAYSCALE);
-	glitchBuffer.setColor(0);
-
-	glitchFbo.allocate(WIDTH, HEIGHT, GL_RGBA);
-
 	userFrame.allocate(WIDTH, HEIGHT, OF_IMAGE_GRAYSCALE);
 	userFrame.setColor(0);
 
@@ -65,12 +60,12 @@ void ofApp::setup(){
 #ifdef ENABLE_CHECKER
 	checker.load("identity.vert", "check.frag");
 #endif
-	beglitch.load("identity.vert", "beglitch.frag");
-	englitch.load("identity.vert", "englitch.frag");
 
 	mainWindow->setFullscreen(startFullscreen);
 	needsResize = true;
 	ofBackground(0);
+
+	glitchEffect.init(WIDTH, HEIGHT);
 }
 
 void ofApp::setupGui() {
@@ -126,20 +121,9 @@ void ofApp::update(){
 	oni_manager.getColorFrame(&colorFrame);
 	oni_manager.getDepthFrame(&depthFrame);
 
-	// ofPixels & pGlitch = glitchBuffer.getPixels();
-	// const ofPixels pDepth = depthFrame.getPixels();
-	// for (int i = 0; i < WIDTH * HEIGHT; i++) {
-	// 	unsigned char dd = mysteryDiff(pGlitch[i], pDepth[i]);
-	// 	pGlitch[i] = dd;
-	// }
-	// glitchBuffer.update();
-
-	englitch.begin();
-	englitch.setUniformTexture("glitchTex", glitchFbo.getTexture(), 1);
-	glitchFbo.begin();
-	depthFrame.draw(canvasSpace);
-	glitchFbo.end();
-	englitch.end();
+	ofFloatColor color;
+	color.setHsb(ofRandom(1.0), 1.0, 1.0);
+	glitchEffect.update(depthFrame, color, levelsRainbow);
 
 	oni_manager.getUserFrame(&userFrame);
 
@@ -155,17 +139,14 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	canvas.begin();
-	ofClear(0);
-
 	if (showBuffer) {
 		ofSetColor(255);
-		// glitchBuffer.draw(canvasSpace);
-		glitchFbo.draw(canvasSpace);
-		canvas.end();
-		canvas.draw(projectionSpace);
+		glitchEffect.drawBuffer(projectionSpace);
 		return;
 	}
+
+	canvas.begin();
+	ofClear(0);
 
 	if (showVideo) {
 		// Draw the color frame, optionally masked and thresholded
@@ -188,20 +169,14 @@ void ofApp::draw(){
 		checker.setUniform1f("amplitude", checkerAmplitude);
 		checker.setUniform2f("resolution", WIDTH, HEIGHT);
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
-		glitchBuffer.draw(canvasSpace);
+		glitchEffect.draw(canvasSpace);
 		checker.end();
 	}
 #endif
 
 	// Draw the glitch!
 	if (showRainbows) {
-		beglitch.begin();
-		beglitch.setUniform1f("threshold", levelsRainbow);
-		ofFloatColor color;
-		color.setHsb(ofRandom(1.0), 1.0, 1.0);
-		beglitch.setUniform3f("color", color.r, color.g, color.b);
-		glitchBuffer.draw(canvasSpace);
-		beglitch.end();
+		glitchEffect.draw(canvasSpace);
 	}
 
 	if (recording) {

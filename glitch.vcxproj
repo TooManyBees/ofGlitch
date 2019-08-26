@@ -115,7 +115,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(OPENNI2_INCLUDE64);$(NITE2_INCLUDE64);$(OF_ROOT)\addons\ofxGui\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(OPENNI2_INCLUDE64);$(NITE2_INCLUDE64);$(OF_ROOT)\addons\ofxGui\src;src\glitches</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -158,7 +158,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(OPENNI2_INCLUDE64);$(NITE2_INCLUDE64);$(OF_ROOT)\addons\ofxGui\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(OPENNI2_INCLUDE64);$(NITE2_INCLUDE64);$(OF_ROOT)\addons\ofxGui\src;src\glitches</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -185,6 +185,7 @@
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
     <ClCompile Include="src\AsyncImageSaver.cpp" />
     <ClCompile Include="src\GifSaver.cpp" />
+    <ClCompile Include="src\glitches\RainbowClassic.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\OniManager.cpp" />
@@ -201,6 +202,8 @@
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
     <ClInclude Include="src\AsyncImageSaver.h" />
     <ClInclude Include="src\GifSaver.h" />
+    <ClInclude Include="src\glitches\GlitchEffect.h" />
+    <ClInclude Include="src\glitches\RainbowClassic.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\OniManager.h" />
   </ItemGroup>
@@ -219,6 +222,7 @@
   <ItemGroup>
     <None Include="bin\data\beglitch.frag" />
     <None Include="bin\data\check.frag" />
+    <None Include="bin\data\englitch.frag" />
     <None Include="bin\data\identity.vert" />
     <None Include="bin\data\usermask.frag" />
   </ItemGroup>
