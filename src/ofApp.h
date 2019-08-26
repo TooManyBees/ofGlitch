@@ -8,6 +8,7 @@
 #include "GifSaver.h"
 #include "GlitchEffect.h"
 #include "RainbowClassic.h"
+#include "RainbowNew.h"
 
 class ofApp : public ofBaseApp{
 

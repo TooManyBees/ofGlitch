@@ -43,6 +43,9 @@
     <ClCompile Include="src\glitches\RainbowClassic.cpp">
       <Filter>src\glitches</Filter>
     </ClCompile>
+    <ClCompile Include="src\glitches\RainbowNew.cpp">
+      <Filter>src\glitches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -110,6 +113,9 @@
     <ClInclude Include="src\glitches\GlitchEffect.h">
       <Filter>src\glitches</Filter>
     </ClInclude>
+    <ClInclude Include="src\glitches\RainbowNew.h">
+      <Filter>src\glitches</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
@@ -128,6 +134,12 @@
       <Filter>data</Filter>
     </None>
     <None Include="bin\data\englitch.frag">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\beglitch2.frag">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\englitch2.frag">
       <Filter>data</Filter>
     </None>
   </ItemGroup>

@@ -186,6 +186,7 @@
     <ClCompile Include="src\AsyncImageSaver.cpp" />
     <ClCompile Include="src\GifSaver.cpp" />
     <ClCompile Include="src\glitches\RainbowClassic.cpp" />
+    <ClCompile Include="src\glitches\RainbowNew.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\OniManager.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="src\GifSaver.h" />
     <ClInclude Include="src\glitches\GlitchEffect.h" />
     <ClInclude Include="src\glitches\RainbowClassic.h" />
+    <ClInclude Include="src\glitches\RainbowNew.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\OniManager.h" />
   </ItemGroup>
@@ -221,8 +223,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\data\beglitch.frag" />
+    <None Include="bin\data\beglitch2.frag" />
     <None Include="bin\data\check.frag" />
     <None Include="bin\data\englitch.frag" />
+    <None Include="bin\data\englitch2.frag" />
     <None Include="bin\data\identity.vert" />
     <None Include="bin\data\usermask.frag" />
   </ItemGroup>
