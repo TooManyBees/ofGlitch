@@ -95,6 +95,7 @@ void ofApp::setupGui() {
 	gui.setup();
 	gui.add(paramsLayers);
 	gui.add(paramsLevels);
+	gui.add(fileNameInput.setup("filename",""));
 #ifdef ENABLE_CHECKER
 	gui.add(paramsChecker);
 #endif
@@ -219,12 +220,19 @@ void ofApp::draw(){
 
 void ofApp::startRecording() {
 #ifdef GIFS
-	string filename = ofGetTimestampString("%F_%H-%M-%S.gif");
-	string path = ofFilePath::join("screenshots", filename);
+	string name = ofGetTimestampString("%F_%H-%M-%S.gif");
+#else
+	string name = ofGetTimestampString("%F_%H-%M-%S");
+#endif
+	startRecording(name);
+}
+
+void ofApp::startRecording(string & name) {
+#ifdef GIFS
+	string path = ofFilePath::join("screenshots", name);
 	imgSaver = new GifSaver(WIDTH, HEIGHT, path);
 #else
-	string timestamp = ofGetTimestampString("%F_%H-%M-%S");
-	string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
+	string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", name));
 	ofFilePath::createEnclosingDirectory(path);
 	imgSaver = new AsyncImageSaver(path);
 #endif

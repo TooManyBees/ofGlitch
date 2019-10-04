@@ -40,6 +40,9 @@
     <ClCompile Include="src\GifSaver.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ofxInputField.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -96,6 +99,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\GifSaver.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ofxInputField.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

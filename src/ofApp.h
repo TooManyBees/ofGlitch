@@ -4,8 +4,11 @@
 #include "openni.h"
 #include "OniManager.h"
 #include "ofxGui.h"
+#include "ofxInputField.h"
 #include "AsyncImageSaver.h"
 #include "GifSaver.h"
+
+#define GIFS true
 
 class ofApp : public ofBaseApp{
 
@@ -76,6 +79,7 @@ class ofApp : public ofBaseApp{
 #else
 		AsyncImageSaver* imgSaver;
 #endif
+		void startRecording(string & name);
 		void startRecording();
 		void endRecording();
 
@@ -87,6 +91,7 @@ class ofApp : public ofBaseApp{
 		ofParameterGroup paramsLevels;
 		ofParameter<float> levelsRainbow;
 		ofParameter<float> levelsThreshold;
+		ofxTextField fileNameInput;
 #ifdef ENABLE_CHECKER
 		ofParameterGroup paramsChecker;
 		ofParameter<bool> checkerEnabled;

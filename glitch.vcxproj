@@ -187,6 +187,7 @@
     <ClCompile Include="src\GifSaver.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
+    <ClCompile Include="src\ofxInputField.cpp" />
     <ClCompile Include="src\OniManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +203,7 @@
     <ClInclude Include="src\AsyncImageSaver.h" />
     <ClInclude Include="src\GifSaver.h" />
     <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\ofxInputField.h" />
     <ClInclude Include="src\OniManager.h" />
   </ItemGroup>
   <ItemGroup>
