@@ -7,6 +7,8 @@
 #include "AsyncImageSaver.h"
 #include "GifSaver.h"
 
+#define GIFS
+
 class ofApp : public ofBaseApp{
 
 	public:
