@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "openni.h"
+#include "OpenNI.h"
 #include "OniManager.h"
 #include "ofxGui.h"
 #include "AsyncImageSaver.h"

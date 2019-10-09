@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "openni.h"
-#include "nite.h"
+#include "OpenNI.h"
+#include "NiTE.h"
 
 #define MAX_DEPTH 10000
 
