@@ -17,4 +17,4 @@ private:
   float threshold;
   bool shadersDirty = true;
   void reloadShaders();
-}
+};

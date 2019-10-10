@@ -234,6 +234,13 @@ void ofApp::keyPressed(int key){
 	switch (key) {
 	case ' ':
 		glitchEffect.markShadersDirty();
+		{
+			usermask.load("identity.vert", "usermask.frag");
+			GLint err = glGetError();
+			if (err != GL_NO_ERROR) {
+				ofLogNotice() << "Shader 'usermask.frag' failed to compile:" << endl << err << endl;
+			}
+		}
 		break;
 	case 'u':
 		// if ui window closed, reopen and reattach listeners
