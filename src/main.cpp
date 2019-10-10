@@ -5,12 +5,10 @@
 int main(int argc, char *argv[]){
 	ofGLFWWindowSettings settings;
 	settings.setGLVersion(3, 2);
-	settings.width = 640;
-	settings.height = 480;
+	settings.setSize(640, 480);
 	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
 
-	settings.width = 250;
-	settings.height = 400;
+	settings.setSize(250, 400);
 	//settings.decorated = false;
 	shared_ptr<ofAppBaseWindow> guiWindow = ofCreateWindow(settings);
 	guiWindow->setVerticalSync(false);
