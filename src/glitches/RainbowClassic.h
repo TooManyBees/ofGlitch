@@ -8,6 +8,7 @@ public:
 	void update(ofImage &depthFrame, ofFloatColor color, float threshold) override;
 	void draw(ofRectangle space) override;
 	void drawBuffer(ofRectangle space) override;
+	void markShadersDirty() override;
 private:
 	ofFbo glitchFbo;
 	ofShader glitchIn;
@@ -16,4 +17,6 @@ private:
 	int width;
 	int height;
 	float threshold;
+	bool shadersDirty = true;
+	void reloadShaders();
 };
