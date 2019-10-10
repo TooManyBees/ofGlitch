@@ -6,6 +6,9 @@
 #include "ofxGui.h"
 #include "AsyncImageSaver.h"
 #include "GifSaver.h"
+#include "GlitchEffect.h"
+#include "RainbowClassic.h"
+#include "RainbowNew.h"
 
 #define GIFS
 
@@ -52,9 +55,9 @@ class ofApp : public ofBaseApp{
 		ofImage colorFrame;
 		ofImage depthFrame;
 		ofImage userFrame;
-		ofImage glitchBuffer;
 
-		ofShader beglitch;
+		RainbowClassic glitchEffect;
+
 #ifdef ENABLE_CHECKER
 		ofShader checker;
 #endif

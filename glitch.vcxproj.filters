@@ -40,6 +40,12 @@
     <ClCompile Include="src\GifSaver.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\glitches\RainbowClassic.cpp">
+      <Filter>src\glitches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\glitches\RainbowNew.cpp">
+      <Filter>src\glitches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -56,6 +62,9 @@
     </Filter>
     <Filter Include="addons\ofxGui\src">
       <UniqueIdentifier>{e3761fc5-1338-4bf0-b939-bab54f119037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\glitches">
+      <UniqueIdentifier>{0c1cc5ac-c799-4431-bf1b-11d4e12d75ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +107,15 @@
     <ClInclude Include="src\GifSaver.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\glitches\RainbowClassic.h">
+      <Filter>src\glitches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glitches\GlitchEffect.h">
+      <Filter>src\glitches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glitches\RainbowNew.h">
+      <Filter>src\glitches</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
@@ -113,6 +131,15 @@
       <Filter>data</Filter>
     </None>
     <None Include="bin\data\usermask.frag">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\englitch.frag">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\beglitch2.frag">
+      <Filter>data</Filter>
+    </None>
+    <None Include="bin\data\englitch2.frag">
       <Filter>data</Filter>
     </None>
   </ItemGroup>

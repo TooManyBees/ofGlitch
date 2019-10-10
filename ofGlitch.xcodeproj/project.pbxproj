@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		403A7A6E234F022700E5CBD9 /* RainbowClassic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 403A7A69234F022600E5CBD9 /* RainbowClassic.cpp */; };
+		403A7A6F234F022700E5CBD9 /* RainbowNew.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 403A7A6D234F022700E5CBD9 /* RainbowNew.cpp */; };
 		4059F9AA230C58F50058A075 /* GifSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4059F9A9230C58F50058A075 /* GifSaver.cpp */; };
 		409291CB2305FF7300A9A57E /* AsyncImageSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 409291CA2305FF7300A9A57E /* AsyncImageSaver.cpp */; };
 		40EFE99C2018D23D004D902E /* libNiTE2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40EFE99B2018D23D004D902E /* libNiTE2.dylib */; };
@@ -55,6 +57,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		403A7A69234F022600E5CBD9 /* RainbowClassic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RainbowClassic.cpp; path = glitches/RainbowClassic.cpp; sourceTree = "<group>"; };
+		403A7A6A234F022700E5CBD9 /* RainbowClassic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowClassic.h; path = glitches/RainbowClassic.h; sourceTree = "<group>"; };
+		403A7A6B234F022700E5CBD9 /* GlitchEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlitchEffect.h; path = glitches/GlitchEffect.h; sourceTree = "<group>"; };
+		403A7A6C234F022700E5CBD9 /* RainbowNew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowNew.h; path = glitches/RainbowNew.h; sourceTree = "<group>"; };
+		403A7A6D234F022700E5CBD9 /* RainbowNew.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RainbowNew.cpp; path = glitches/RainbowNew.cpp; sourceTree = "<group>"; };
 		4059F9A8230C58F50058A075 /* GifSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GifSaver.h; sourceTree = "<group>"; };
 		4059F9A9230C58F50058A075 /* GifSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GifSaver.cpp; sourceTree = "<group>"; };
 		409291C92305FAF400A9A57E /* AsyncImageSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageSaver.h; sourceTree = "<group>"; };
@@ -104,6 +111,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		403A7A68234F020B00E5CBD9 /* glitches */ = {
+			isa = PBXGroup;
+			children = (
+				403A7A6B234F022700E5CBD9 /* GlitchEffect.h */,
+				403A7A69234F022600E5CBD9 /* RainbowClassic.cpp */,
+				403A7A6A234F022700E5CBD9 /* RainbowClassic.h */,
+				403A7A6D234F022700E5CBD9 /* RainbowNew.cpp */,
+				403A7A6C234F022700E5CBD9 /* RainbowNew.h */,
+			);
+			name = glitches;
+			sourceTree = "<group>";
+		};
 		6948EE371B920CB800B5AC1A /* local_addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +180,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				403A7A68234F020B00E5CBD9 /* glitches */,
 				4059F9A9230C58F50058A075 /* GifSaver.cpp */,
 				4059F9A8230C58F50058A075 /* GifSaver.h */,
 				409291CA2305FF7300A9A57E /* AsyncImageSaver.cpp */,
@@ -276,6 +296,7 @@
 				4059F9AA230C58F50058A075 /* GifSaver.cpp in Sources */,
 				40F04A3C20826E17008F6F7F /* ofxSlider.cpp in Sources */,
 				40F04A3920826E17008F6F7F /* ofxGuiGroup.cpp in Sources */,
+				403A7A6F234F022700E5CBD9 /* RainbowNew.cpp in Sources */,
 				40F04A3B20826E17008F6F7F /* ofxPanel.cpp in Sources */,
 				409291CB2305FF7300A9A57E /* AsyncImageSaver.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
@@ -283,6 +304,7 @@
 				40F04A3A20826E17008F6F7F /* ofxLabel.cpp in Sources */,
 				9E4859EDB96494BF40D4ABA8 /* OniManager.cpp in Sources */,
 				40F04A3820826E17008F6F7F /* ofxButton.cpp in Sources */,
+				403A7A6E234F022700E5CBD9 /* RainbowClassic.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,7 +340,7 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
-					src,
+					"src/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
@@ -352,7 +374,7 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
-					src,
+					"src/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -379,7 +401,7 @@
 				GCC_MODEL_TUNING = NONE;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
-					src,
+					"src/**",
 					"~/code/openni2-nite2/NiTE-MacOSX-x64-2.2/include",
 					"~/code/openni2-nite2/OpenNI-MacOSX-x64-2.2/include",
 					../../../addons/ofxGui/src,
@@ -412,7 +434,7 @@
 				GCC_MODEL_TUNING = NONE;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
-					src,
+					"src/**",
 					"~/code/openni2-nite2/NiTE-MacOSX-x64-2.2/include",
 					"~/code/openni2-nite2/OpenNI-MacOSX-x64-2.2/include",
 					../../../addons/ofxGui/src,
