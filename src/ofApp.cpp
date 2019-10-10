@@ -232,6 +232,9 @@ void ofApp::drawGui(ofEventArgs & args) {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	switch (key) {
+	case ' ':
+		glitchEffect.markShadersDirty();
+		break;
 	case 'u':
 		// if ui window closed, reopen and reattach listeners
 		break;
