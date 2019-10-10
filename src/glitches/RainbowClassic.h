@@ -1,5 +1,4 @@
-﻿#pragma once
-#include "ofMain.h"
+#pragma once
 #include "GlitchEffect.h"
 
 class RainbowClassic : public GlitchEffect {
