@@ -46,6 +46,7 @@ class ofApp : public ofBaseApp{
 		bool mirror = true;
 		bool startFullscreen = false;
 		float backPlane = 10000;
+		bool useHistogram = false;
 		OniManager oni_manager;
 
 		ofFbo canvas;

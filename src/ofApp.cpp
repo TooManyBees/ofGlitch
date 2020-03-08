@@ -17,6 +17,9 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 				}
 			}
 		}
+		else if (strcmp(argv[i], "--histogram") == 0) {
+			useHistogram = true;
+		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
 #ifdef WIN32
 			char* term = strrchr(argv[0], '\\');
@@ -40,7 +43,7 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 void ofApp::setup(){
 	mainWindow->setVerticalSync(true);
 	ofSetFrameRate(FPS);
-	if (oni_manager.setup(WIDTH, HEIGHT, 30, backPlane, mirror)) {
+	if (oni_manager.setup(WIDTH, HEIGHT, 30, backPlane, mirror, useHistogram)) {
 		cout << "Setup device and streams.\n" << endl;
 	}
 	else {

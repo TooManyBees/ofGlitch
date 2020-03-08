@@ -10,7 +10,7 @@
 //	openni::OpenNI::shutdown();
 //}
 
-bool OniManager::setup(int w, int h, int fps, float backPlane, bool mirror) {
+bool OniManager::setup(int w, int h, int fps, float backPlane, bool mirror, bool useHistogram) {
 	//colorFrameTimestamp = 0;
 	//userFrameTimestamp = 0;
 
@@ -45,6 +45,7 @@ bool OniManager::setup(int w, int h, int fps, float backPlane, bool mirror) {
 
 	pDepthMap = new unsigned char[w * h];
 	BACK_PLANE = backPlane;
+	USE_HISTOGRAM = useHistogram;
 
 	return true;
 }
@@ -60,7 +61,7 @@ void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's i
 	openni::VideoFrameRef depthFrame = userFrame.getDepthFrame();
 
 	if (depthFrame.isValid()) {
-		histogram(depthHistogram, depthFrame);
+		if (USE_HISTOGRAM) histogram(depthHistogram, depthFrame);
 		int frameWidth = depthFrame.getWidth();
 		int frameHeight = depthFrame.getHeight();
 		memset(pDepthMap, 0, frameWidth * frameHeight);
@@ -78,8 +79,14 @@ void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's i
 			{
 				if (*pDepth != 0)
 				{
-					int nHistValue = depthHistogram[*pDepth];
-					*pTex = nHistValue;
+					if (USE_HISTOGRAM) {
+						int nHistValue = depthHistogram[*pDepth];
+						*pTex = nHistValue;
+					}
+					else {
+						float brightness = (float)(BACK_PLANE - *pDepth) / (float)BACK_PLANE;
+						*pTex = (unsigned char)(255 * brightness);
+					}
 				}
 			}
 
