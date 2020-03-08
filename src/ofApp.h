@@ -35,7 +35,7 @@ class ofApp : public ofBaseApp{
 
 		static const int WIDTH = 640;
 		static const int HEIGHT = 480;
-		static const int FPS = 30;
+		static const int FPS = 20;
 
 		void setupGui();
 		void drawGui(ofEventArgs & args);
