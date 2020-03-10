@@ -9,6 +9,8 @@
 #include "GlitchEffect.h"
 #include "RainbowClassic.h"
 #include "RainbowNew.h"
+#include "ColorPickerRandom.h"
+#include "ColorPickerTrans.h"
 
 #define GIFS
 
