@@ -59,7 +59,8 @@ class ofApp : public ofBaseApp{
 		ofImage depthFrame;
 		ofImage userFrame;
 
-		RainbowClassic glitchEffect;
+		RainbowNew glitchEffect;
+		ColorPickerTrans colorPicker;
 
 #ifdef ENABLE_CHECKER
 		ofShader checker;

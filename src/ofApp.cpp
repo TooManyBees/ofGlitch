@@ -124,8 +124,9 @@ void ofApp::update(){
 	oni_manager.getColorFrame(&colorFrame);
 	oni_manager.getDepthFrame(&depthFrame);
 
-	ofFloatColor color;
-	color.setHsb(ofRandom(1.0), 1.0, 1.0);
+//    ofFloatColor color;
+//    color.setHsb(ofRandom(1.0), 1.0, 1.0);
+    ofFloatColor color = colorPicker.pick();
 	glitchEffect.update(depthFrame, color, levelsRainbow);
 
 	oni_manager.getUserFrame(&userFrame);
