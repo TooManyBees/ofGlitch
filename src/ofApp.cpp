@@ -124,9 +124,7 @@ void ofApp::update(){
 	oni_manager.getColorFrame(&colorFrame);
 	oni_manager.getDepthFrame(&depthFrame);
 
-//    ofFloatColor color;
-//    color.setHsb(ofRandom(1.0), 1.0, 1.0);
-    ofFloatColor color = colorPicker.pick();
+	ofFloatColor color = colorPickers[colorPicker]->pick();
 	glitchEffect.update(depthFrame, color, levelsRainbow);
 
 	oni_manager.getUserFrame(&userFrame);
@@ -266,6 +264,9 @@ void ofApp::keyPressed(int key){
 		checkerEnabled = !checkerEnabled;
 		break;
 #endif
+	case 'p':
+		colorPicker = (colorPicker + 1) % 2;
+		break;
 	case 'r':
 		showRainbows = !showRainbows;
 		break;

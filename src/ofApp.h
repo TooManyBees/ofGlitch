@@ -60,7 +60,11 @@ class ofApp : public ofBaseApp{
 		ofImage userFrame;
 
 		RainbowNew glitchEffect;
-		ColorPickerTrans colorPicker;
+		ColorPicker* colorPickers[2] = {
+			new ColorPickerRandom(),
+			new ColorPickerTrans(),
+		};
+		int colorPicker = 0;
 
 #ifdef ENABLE_CHECKER
 		ofShader checker;
