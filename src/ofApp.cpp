@@ -369,3 +369,7 @@ float ofApp::cyclePerMinute(float rpm, float offset) {
 	return fCycle / length;
 }
 #endif
+
+void ofApp::quit(ofEventArgs & args) {
+	std::exit(0);
+}

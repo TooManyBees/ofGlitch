@@ -41,6 +41,8 @@ class ofApp : public ofBaseApp{
 		void drawGui(ofEventArgs & args);
 		void keyPressedInGui(ofKeyEventArgs & args);
 
+		void quit(ofEventArgs & args);
+
 	private:
 		shared_ptr<ofAppBaseWindow> mainWindow;
 		bool mirror = true;
