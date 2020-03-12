@@ -4,7 +4,7 @@
 
 class GifSaver {
 public:
-	GifSaver(int w, int h, string path) : width(w), height(h), recordingPath(path) {
+	GifSaver(int w, int h, float f, string path) : width(w), height(h), fps(f), recordingPath(path) {
 		frames = new vector<ofPixels*>;
 		frames->reserve(60);
 	};
@@ -19,6 +19,7 @@ public:
 	void push(ofPixels* pixels);
 	void save();
 private:
+	float fps = 30.f;
 	string recordingPath;
 	unsigned int width;
 	unsigned int height;

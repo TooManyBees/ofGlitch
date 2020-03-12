@@ -9,14 +9,14 @@ void GifSaver::push(ofPixels* pixels) {
 	simplified for a more specific use case.
 */
 
-void processFrame(unsigned char* frame, unsigned int width, unsigned int height, FIMULTIBITMAP *multi) {
+void processFrame(unsigned char* frame, unsigned int width, unsigned int height, float fps, FIMULTIBITMAP *multi) {
 	// FIXME: I'm ignoring the whole little-endian bs because this is just for my own hardware
 	FIBITMAP* bitmap = FreeImage_ConvertFromRawBits(frame, width, height, width * 4, 32, 0, 0, 0, true);
 	FIBITMAP* quantizedBitmap = FreeImage_ColorQuantizeEx(bitmap, FIQ_WUQUANT);
 
 	FreeImage_SetMetadata(FIMD_ANIMATION, quantizedBitmap, NULL, NULL);
 	FITAG *tag = FreeImage_CreateTag();
-	DWORD frameDuration = (DWORD)(1000.f / 30.f);
+	DWORD frameDuration = (DWORD)(1000.f / fps);
 	if (tag) {
 		FreeImage_SetTagKey(tag, "FrameTime");
 		FreeImage_SetTagType(tag, FIDT_LONG);
@@ -32,10 +32,10 @@ void processFrame(unsigned char* frame, unsigned int width, unsigned int height,
 	if (quantizedBitmap != NULL) FreeImage_Unload(quantizedBitmap);
 }
 
-void asyncSave(vector<ofPixels*>* frames, unsigned int width, unsigned int height, string path) {
+void asyncSave(vector<ofPixels*>* frames, unsigned int width, unsigned int height, float fps, string path) {
 	FIMULTIBITMAP *multi = FreeImage_OpenMultiBitmap(FIF_GIF, ofToDataPath(path).c_str(), TRUE, FALSE);
 	for (auto frame : *frames) {
-		processFrame(frame->getData(), width, height, multi);
+		processFrame(frame->getData(), width, height, fps, multi);
 		delete frame;
 	}
 	delete frames;
@@ -44,7 +44,7 @@ void asyncSave(vector<ofPixels*>* frames, unsigned int width, unsigned int heigh
 }
 
 void GifSaver::save() {
-	std::thread t(asyncSave, frames, width, height, recordingPath);
+	std::thread t(asyncSave, frames, width, height, fps, recordingPath);
 	t.detach();
 	detached = true;
 }

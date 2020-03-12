@@ -211,7 +211,7 @@ void ofApp::startRecording() {
 #ifdef GIFS
 	string filename = ofGetTimestampString("%F_%H-%M-%S.gif");
 	string path = ofFilePath::join("screenshots", filename);
-	imgSaver = new GifSaver(WIDTH, HEIGHT, path);
+	imgSaver = new GifSaver(WIDTH, HEIGHT, (float)FPS, path);
 #else
 	string timestamp = ofGetTimestampString("%F_%H-%M-%S");
 	string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
