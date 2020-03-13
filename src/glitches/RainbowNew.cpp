@@ -13,12 +13,14 @@ void RainbowNew::update(ofImage &depthFrame, ofFloatColor color, float _threshol
 	glitchIn.begin();
 	glitchIn.setUniform1f("threshold", threshold);
 	glitchIn.setUniform3f("color", color.r, color.g, color.b);
-	glitchIn.setUniformTexture("glitchTex", glitchFbo.getTextureReference(), 1);
+	glitchIn.setUniformTexture("glitchTex", glitchFbo.getTexture(), 1);
+	glitchIn.setUniform2f("resolution", width, height);
 
 	glitchFbo.begin();
 
 	ofDisableAlphaBlending();
 	depthFrame.draw(0, 0, width, height);
+	//depthFrame.drawSubsection(0, 0, width, height, 32, 24, width - 64, height - 48);
 	ofEnableAlphaBlending();
 	glitchFbo.end();
 

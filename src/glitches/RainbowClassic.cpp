@@ -12,7 +12,7 @@ void RainbowClassic::update(ofImage &depthFrame, ofFloatColor _color, float _thr
 	threshold = _threshold;
 
 	glitchIn.begin();
-	glitchIn.setUniformTexture("glitchTex", glitchFbo.getTextureReference(), 1);
+	glitchIn.setUniformTexture("glitchTex", glitchFbo.getTexture(), 1);
 	glitchFbo.begin();
 	depthFrame.draw(0, 0, width, height);
 	glitchFbo.end();
@@ -21,6 +21,7 @@ void RainbowClassic::update(ofImage &depthFrame, ofFloatColor _color, float _thr
 
 void RainbowClassic::drawBuffer(ofRectangle space) {
 	glitchFbo.draw(space);
+	//glitchFbo.getTexture().drawSubsection(space, ofRectangle(40, 20, width - 60, height - 40));
 }
 
 void RainbowClassic::draw(ofRectangle space) {
