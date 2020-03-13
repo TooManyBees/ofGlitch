@@ -9,11 +9,10 @@ int main(int argc, char *argv[]){
 	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
 
 	settings.setSize(250, 400);
-	//settings.decorated = false;
+	settings.shareContextWith = mainWindow;
 	shared_ptr<ofAppBaseWindow> guiWindow = ofCreateWindow(settings);
-	guiWindow->setVerticalSync(false);
 
-	shared_ptr<ofApp> mainApp(new ofApp(mainWindow));
+	shared_ptr<ofApp> mainApp(new ofApp(mainWindow, guiWindow));
 	mainApp->parseArgs(argc, argv);
 	mainApp->setupGui();
 

@@ -42,6 +42,7 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 //--------------------------------------------------------------
 void ofApp::setup(){
 	mainWindow->setVerticalSync(true);
+	guiWindow->setVerticalSync(true);
 	ofSetFrameRate(FPS);
 	if (oni_manager.setup(WIDTH, HEIGHT, 30, backPlane, mirror, useHistogram)) {
 		cout << "Setup device and streams.\n" << endl;

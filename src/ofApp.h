@@ -15,7 +15,7 @@
 class ofApp : public ofBaseApp{
 
 	public:
-		ofApp(shared_ptr<ofAppBaseWindow> _mainWindow) : mainWindow(_mainWindow) {};
+		ofApp(shared_ptr<ofAppBaseWindow> _mainWindow, shared_ptr<ofAppBaseWindow> _guiWindow) : mainWindow(_mainWindow), guiWindow(_guiWindow) {};
 		void parseArgs(int argc, char* argv[]);
 		void setup();
 		void update();
@@ -45,6 +45,7 @@ class ofApp : public ofBaseApp{
 
 	private:
 		shared_ptr<ofAppBaseWindow> mainWindow;
+		shared_ptr<ofAppBaseWindow> guiWindow;
 		bool mirror = true;
 		bool startFullscreen = false;
 		float backPlane = 10000;
