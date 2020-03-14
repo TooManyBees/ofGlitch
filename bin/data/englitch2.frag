@@ -4,6 +4,8 @@ uniform sampler2DRect tex0;
 uniform sampler2DRect glitchTex;
 uniform vec3 color;
 uniform float threshold;
+uniform float expansion;
+uniform vec2 expansionVector;
 uniform vec2 resolution;
 
 in vec2 texCoordVarying;
@@ -25,14 +27,15 @@ float classicDiff(vec4 _glitch, vec4 _depth) {
     return abs(glitch - depth);
 }
 
-vec2 expand(vec2 pos, float amount) {
+vec2 expand(vec2 pos, float amount, vec2 dir) {
+    vec2 direction = dir + vec2(0.5);
     vec2 ratio = vec2(resolution.x / resolution.y, 1);
-    vec2 centered = (pos/resolution - vec2(0.5)) * ratio;
-    return ((centered * amount / ratio) + vec2(0.5)) * resolution;
+    vec2 centered = (pos/resolution - direction) * ratio;
+    return ((centered * amount / ratio) + direction) * resolution;
 }
 
 void main() {
-    vec2 pos = expand(texCoordVarying, 0.9);
+    vec2 pos = expand(texCoordVarying, expansion, expansionVector);
     vec4 depthSample = texture(tex0, pos);
     vec4 glitchSample = texture(glitchTex, pos);
     float alpha = classicDiff(glitchSample, depthSample);

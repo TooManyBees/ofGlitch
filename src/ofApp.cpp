@@ -83,6 +83,11 @@ void ofApp::setupGui() {
 	paramsLevels.add(levelsRainbow.set("Rainbows", 0.6, 0.0, 1.0));
 	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));
 
+	paramsExpansion.setName("Expansion");
+	paramsExpansion.add(levelsExpansion.set("Magnitude", 0.0, -0.5, 0.5));
+	paramsExpansion.add(levelsExpansionX.set("Direction X", 0.0, -0.5, 0.5));
+	paramsExpansion.add(levelsExpansionY.set("Direction Y", 0.0, -0.5, 0.5));
+
 #ifdef ENABLE_CHECKER
 	paramsChecker.setName("Checker pattern");
 	paramsChecker.add(checkerEnabled.set("Enabled", false));
@@ -97,6 +102,7 @@ void ofApp::setupGui() {
 	gui.setup();
 	gui.add(paramsLayers);
 	gui.add(paramsLevels);
+	gui.add(paramsExpansion);
 #ifdef ENABLE_CHECKER
 	gui.add(paramsChecker);
 #endif
@@ -127,7 +133,8 @@ void ofApp::update(){
 
 	ofFloatColor color;
 	color.setHsb(ofRandom(1.0), 1.0, 1.0);
-	glitchEffect.update(depthFrame, color, levelsRainbow);
+	glm::vec2 expansionVector(-1 * levelsExpansionX, levelsExpansionY);
+	glitchEffect.update(depthFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector);
 
 	oni_manager.getUserFrame(&userFrame);
 

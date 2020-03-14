@@ -96,6 +96,10 @@ class ofApp : public ofBaseApp{
 		ofParameterGroup paramsLevels;
 		ofParameter<float> levelsRainbow;
 		ofParameter<float> levelsThreshold;
+		ofParameterGroup paramsExpansion;
+		ofParameter<float> levelsExpansion;
+		ofParameter<float> levelsExpansionX;
+		ofParameter<float> levelsExpansionY;
 #ifdef ENABLE_CHECKER
 		ofParameterGroup paramsChecker;
 		ofParameter<bool> checkerEnabled;
