@@ -45,7 +45,7 @@ void ofApp::setup(){
 	guiWindow->setVerticalSync(true);
 	ofSetFrameRate(FPS);
 	if (oni_manager.setup(WIDTH, HEIGHT, 30, backPlane, mirror, useHistogram)) {
-		cout << "Setup device and streams.\n" << endl;
+		cout << "Setup device and streams.\n" << "Backplane at " << backPlane << endl;
 	}
 	else {
 		cerr << openni::OpenNI::getExtendedError() << endl;

@@ -84,7 +84,7 @@ void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's i
 						*pTex = nHistValue;
 					}
 					else {
-						float brightness = (float)(BACK_PLANE - *pDepth) / (float)BACK_PLANE;
+						float brightness = (float)max(0, BACK_PLANE - *pDepth) / (float)BACK_PLANE;
 						*pTex = (unsigned char)(255 * brightness);
 					}
 				}
