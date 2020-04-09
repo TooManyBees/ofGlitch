@@ -277,11 +277,11 @@
 		24FBCF0B9B36FC1F8D6CD9DA /* glitches */ = {
 			isa = PBXGroup;
 			children = (
-				BA13ED994AF1E587AA8E482D /* RainbowNew.cpp */,
-				8A1A39E35A41A8C7E365475C /* RainbowClassic.h */,
-				CDA800FF1D24F20448DF70DE /* RainbowNew.h */,
 				0EA1947BB853C3DBBA157191 /* GlitchEffect.h */,
 				0E8718E97A45C80EF9E6E0C1 /* RainbowClassic.cpp */,
+				8A1A39E35A41A8C7E365475C /* RainbowClassic.h */,
+				BA13ED994AF1E587AA8E482D /* RainbowNew.cpp */,
+				CDA800FF1D24F20448DF70DE /* RainbowNew.h */,
 			);
 			name = glitches;
 			sourceTree = "<group>";
@@ -647,16 +647,16 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				A49E77C27AC23F43973DFF10 /* AsyncImageSaver.cpp */,
+				3EF76C98FA52427ED53DAD40 /* AsyncImageSaver.h */,
+				7F0CEA562BA61D8F146A5BDC /* GifSaver.cpp */,
+				24AB3AAED9A90A5C483F0D6B /* GifSaver.h */,
+				24FBCF0B9B36FC1F8D6CD9DA /* glitches */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
-				24FBCF0B9B36FC1F8D6CD9DA /* glitches */,
 				AF91EA3DE8A54AD40E928C06 /* OniManager.cpp */,
-				3EF76C98FA52427ED53DAD40 /* AsyncImageSaver.h */,
 				63A078D85C9103B35FDF57B9 /* OniManager.h */,
-				24AB3AAED9A90A5C483F0D6B /* GifSaver.h */,
-				A49E77C27AC23F43973DFF10 /* AsyncImageSaver.cpp */,
-				7F0CEA562BA61D8F146A5BDC /* GifSaver.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
