@@ -69,7 +69,12 @@ void ofApp::setup(){
 	needsResize = true;
 	ofBackground(0);
 
-	glitchEffect.init(WIDTH, HEIGHT);
+	glitches.push_back(new RainbowClassic());
+	glitches.push_back(new RainbowNew());
+	for (auto glitch : glitches) {
+		glitch->init(WIDTH, HEIGHT);
+	}
+	glitchEffect = glitches[glitchIndex];
 }
 
 void ofApp::setupGui() {
@@ -135,7 +140,7 @@ void ofApp::update(){
 	ofFloatColor color;
 	color.setHsb(ofRandom(1.0), 1.0, 1.0);
 	glm::vec2 expansionVector(-1 * levelsExpansionX, levelsExpansionY);
-	glitchEffect.update(depthFrame, userFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector);
+	glitchEffect->update(depthFrame, userFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector);
 
 	if (needsResize) sizeProjectionSpace();
 
@@ -151,7 +156,8 @@ void ofApp::update(){
 void ofApp::draw(){
 	if (showBuffer) {
 		ofSetColor(255);
-		glitchEffect.drawBuffer(projectionSpace);
+		glitchEffect->drawBuffer(projectionSpace);
+//		depthFrame.draw(projectionSpace);
 		return;
 	}
 
@@ -179,14 +185,14 @@ void ofApp::draw(){
 		checker.setUniform1f("amplitude", checkerAmplitude);
 		checker.setUniform2f("resolution", WIDTH, HEIGHT);
 		checker.setUniformTexture("usermask", userFrame.getTexture(), 1);
-		glitchEffect.draw(canvasSpace);
+		glitchEffect->draw(canvasSpace);
 		checker.end();
 	}
 #endif
 
 	// Draw the glitch!
 	if (showRainbows) {
-		glitchEffect.draw(canvasSpace);
+		glitchEffect->draw(canvasSpace);
 	}
 
 	if (recording) {
@@ -243,7 +249,7 @@ void ofApp::drawGui(ofEventArgs & args) {
 void ofApp::keyPressed(int key){
 	switch (key) {
 	case ' ':
-		glitchEffect.markShadersDirty();
+		glitchEffect->markShadersDirty();
 		{
 			usermask.load("identity.vert", "usermask.frag");
 			GLint err = glGetError();
@@ -251,6 +257,10 @@ void ofApp::keyPressed(int key){
 				ofLogNotice() << "Shader 'usermask.frag' failed to compile:" << endl << err << endl;
 			}
 		}
+		break;
+	case '\t':
+		glitchIndex = (glitchIndex + 1) % glitches.size();
+		glitchEffect = glitches[glitchIndex];
 		break;
 	case 'u':
 		// if ui window closed, reopen and reattach listeners

@@ -60,7 +60,9 @@ class ofApp : public ofBaseApp{
 		ofImage depthFrame;
 		ofImage userFrame;
 
-		RainbowClassic glitchEffect;
+		GlitchEffect* glitchEffect;
+		size_t glitchIndex = 0;
+		vector<GlitchEffect*> glitches;
 
 #ifdef ENABLE_CHECKER
 		ofShader checker;
