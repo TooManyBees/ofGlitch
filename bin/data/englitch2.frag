@@ -2,6 +2,7 @@
 
 uniform sampler2DRect tex0;
 uniform sampler2DRect glitchTex;
+uniform sampler2DRect userTex;
 uniform vec3 color;
 uniform float threshold;
 uniform float expansion;
@@ -34,9 +35,20 @@ vec2 expand(vec2 pos, float amount, vec2 dir) {
     return ((centered * amount / ratio) + direction) * resolution;
 }
 
+const float BOOST_USER = 0.15;
+
+vec4 highlightUsers(vec2 pos) {
+    float user = texture(userTex, pos).r;
+    vec3 depth = texture(tex0, pos).rgb;
+    vec3 bump = step(0.5, user) * (vec3(1.0) - depth) * BOOST_USER;
+    return vec4(depth + bump, 1.0);
+}
+
 void main() {
     vec2 pos = expand(texCoordVarying, expansion, expansionVector);
-    vec4 depthSample = texture(tex0, pos);
+    float userPresent = texture(glitchTex, pos).r;
+    // vec4 depthSample = texture(tex0, pos);
+    vec4 depthSample = highlightUsers(pos);
     vec4 glitchSample = texture(glitchTex, pos);
     float alpha = classicDiff(glitchSample, depthSample);
     vec3 mixed = mix(color, glitchSample.rgb, step(threshold, alpha));

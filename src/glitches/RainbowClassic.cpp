@@ -6,7 +6,7 @@ void RainbowClassic::init(int _width, int _height) {
 	glitchFbo.allocate(width, height, GL_RGBA);
 }
 
-void RainbowClassic::update(ofImage &depthFrame, ofFloatColor _color, float _threshold, float _expansion, glm::vec2 _expansionVector) {
+void RainbowClassic::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor _color, float _threshold, float expansion, glm::vec2 expansionVector) {
 	reloadShaders();
 	color = _color;
 	threshold = _threshold;

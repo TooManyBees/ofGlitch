@@ -130,13 +130,12 @@ unsigned char underflowDiff(unsigned char a, unsigned char b) {
 void ofApp::update(){
 	oni_manager.getColorFrame(&colorFrame);
 	oni_manager.getDepthFrame(&depthFrame);
+	oni_manager.getUserFrame(&userFrame);
 
 	ofFloatColor color;
 	color.setHsb(ofRandom(1.0), 1.0, 1.0);
 	glm::vec2 expansionVector(-1 * levelsExpansionX, levelsExpansionY);
-	glitchEffect.update(depthFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector);
-
-	oni_manager.getUserFrame(&userFrame);
+	glitchEffect.update(depthFrame, userFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector);
 
 	if (needsResize) sizeProjectionSpace();
 
