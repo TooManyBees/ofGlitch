@@ -87,6 +87,7 @@ void ofApp::setupGui() {
 	paramsLevels.setName("Levels");
 	paramsLevels.add(levelsRainbow.set("Rainbows", 0.6, 0.0, 1.0));
 	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));
+	paramsLevels.add(levelsUser.set("User boost", 0.0, 0.0, 1.0));
 
 	paramsExpansion.setName("Expansion");
 	paramsExpansion.add(levelsExpansion.set("Magnitude", 0.0, -0.5, 0.5));
@@ -140,7 +141,7 @@ void ofApp::update(){
 	ofFloatColor color;
 	color.setHsb(ofRandom(1.0), 1.0, 1.0);
 	glm::vec2 expansionVector(-1 * levelsExpansionX, levelsExpansionY);
-	glitchEffect->update(depthFrame, userFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector);
+	glitchEffect->update(depthFrame, userFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector, levelsUser);
 
 	if (needsResize) sizeProjectionSpace();
 

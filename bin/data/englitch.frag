@@ -6,6 +6,7 @@ uniform sampler2DRect userTex;
 uniform float expansion;
 uniform vec2 expansionVector;
 uniform vec2 resolution;
+uniform float boostUser;
 
 in vec2 texCoordVarying;
 
@@ -42,12 +43,10 @@ vec2 expand(vec2 pos, float amount, vec2 dir) {
     return ((centered * amount / ratio) + direction) * resolution;
 }
 
-const float BOOST_USER = 0.5;
-
 vec4 highlightUsers(vec2 pos) {
     float user = texture(userTex, pos).r;
     vec3 depth = texture(tex0, pos).rgb;
-    vec3 bump = step(0.5, user) * (vec3(1.0) - depth) * BOOST_USER;
+    vec3 bump = step(0.5, user) * (vec3(1.0) - depth) * boostUser;
     return vec4(depth + bump, 1.0);
 }
 

@@ -4,7 +4,7 @@
 class RainbowClassic : public GlitchEffect {
 public:
 	void init(int width, int height) override;
-	void update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor color, float threshold, float expansion = 1.0, glm::vec2 expansionVector = glm::vec2(0.0, 0.0)) override;
+	void update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor color, float threshold, float expansion = 1.0, glm::vec2 expansionVector = glm::vec2(0.0, 0.0), float boostUser = 0.0) override;
 	void draw(ofRectangle space) override;
 	void drawBuffer(ofRectangle space) override;
 	void markShadersDirty() override;

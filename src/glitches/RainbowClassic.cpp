@@ -6,7 +6,7 @@ void RainbowClassic::init(int _width, int _height) {
 	glitchFbo.allocate(width, height, GL_RGBA);
 }
 
-void RainbowClassic::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor _color, float _threshold, float expansion, glm::vec2 expansionVector) {
+void RainbowClassic::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor _color, float _threshold, float expansion, glm::vec2 expansionVector, float boostUser) {
 	reloadShaders();
 	color = _color;
 	threshold = _threshold;
@@ -16,6 +16,7 @@ void RainbowClassic::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColo
 	glitchIn.setUniformTexture("userTex", userFrame, 2);
 	glitchIn.setUniform1f("expansion", expansion);
 	glitchIn.setUniform2f("expansionVector", expansionVector);
+	glitchIn.setUniform1f("boostUser", boostUser);
 	glitchFbo.begin();
 	depthFrame.draw(0, 0, width, height);
 	glitchFbo.end();

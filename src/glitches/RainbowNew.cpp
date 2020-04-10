@@ -6,7 +6,7 @@ void RainbowNew::init(int _width, int _height) {
 	glitchFbo.allocate(width, height, GL_RGBA);
 }
 
-void RainbowNew::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor color, float _threshold, float expansion, glm::vec2 expansionVector) {
+void RainbowNew::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor color, float _threshold, float expansion, glm::vec2 expansionVector, float boostUser) {
 	reloadShaders();
 	threshold = _threshold;
 
@@ -18,6 +18,7 @@ void RainbowNew::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColor co
 	glitchIn.setUniformTexture("glitchTex", glitchFbo.getTexture(), 1);
 	glitchIn.setUniformTexture("userTex", userFrame, 2);
 	glitchIn.setUniform2f("resolution", width, height);
+	glitchIn.setUniform1f("boostUser", boostUser);
 
 	glitchFbo.begin();
 
