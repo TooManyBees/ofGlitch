@@ -91,6 +91,7 @@ class ofApp : public ofBaseApp{
 		void endRecording();
 
 		ofParameterGroup paramsLayers;
+		ofParameter<bool> showDepth;
 		ofParameter<bool> showBuffer;
 		ofParameter<bool> showVideo;
 		ofParameter<bool> showThreshold;

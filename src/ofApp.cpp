@@ -79,6 +79,7 @@ void ofApp::setup(){
 
 void ofApp::setupGui() {
 	paramsLayers.setName("Layers");
+	paramsLayers.add(showDepth.set("Show depth", false));
 	paramsLayers.add(showBuffer.set("Show buffer", false));
 	paramsLayers.add(showVideo.set("Show video", true));
 	paramsLayers.add(showThreshold.set("Threshold video", true));
@@ -155,10 +156,13 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	if (showBuffer) {
+	if (showDepth) {
+		ofSetColor(255);
+		depthFrame.draw(projectionSpace);
+		return;
+	} else if (showBuffer) {
 		ofSetColor(255);
 		glitchEffect->drawBuffer(projectionSpace);
-//		depthFrame.draw(projectionSpace);
 		return;
 	}
 
