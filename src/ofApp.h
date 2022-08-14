@@ -64,9 +64,9 @@ class ofApp : public ofBaseApp{
 		size_t glitchIndex = 0;
 		vector<GlitchEffect*> glitches;
 
-#ifdef ENABLE_CHECKER
+		#ifdef ENABLE_CHECKER
 		ofShader checker;
-#endif
+		#endif
 		ofShader usermask;
 		size_t timeCycle;
 		size_t timeOffset;
@@ -82,11 +82,11 @@ class ofApp : public ofBaseApp{
 		string recordingPath;
 		static const unsigned int MAX_RECORDING_FRAMES = 20 * FPS;
 		unsigned int numRecordingFrames = 0;
-#ifdef GIFS
+		#ifdef GIFS
 		GifSaver* imgSaver;
-#else
+		#else
 		AsyncImageSaver* imgSaver;
-#endif
+		#endif
 		void startRecording();
 		void endRecording();
 
@@ -104,7 +104,7 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> levelsExpansion;
 		ofParameter<float> levelsExpansionX;
 		ofParameter<float> levelsExpansionY;
-#ifdef ENABLE_CHECKER
+		#ifdef ENABLE_CHECKER
 		ofParameterGroup paramsChecker;
 		ofParameter<bool> checkerEnabled;
 		ofParameter<bool> checkerOutside;
@@ -113,6 +113,6 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> checkerRevolutionOffset;
 		ofParameter<float> checkerBPM;
 		ofParameter<float> checkerBeatOffset;
-#endif
+		#endif
 		ofxGuiGroup gui;
 };

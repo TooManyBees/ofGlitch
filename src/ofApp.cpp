@@ -21,11 +21,11 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 			useHistogram = true;
 		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-#ifdef WIN32
+			#ifdef WIN32
 			char* term = strrchr(argv[0], '\\');
-#else
+			#else
 			char* term = strrchr(argv[0], '/');
-#endif
+			#endif
 			if (term == NULL) term = argv[0];
 			cout << "Usage: " << term+1 << " [options]" << endl;
 			cout << "Options:" << endl;
@@ -61,9 +61,9 @@ void ofApp::setup(){
 	canvas.allocate(WIDTH, HEIGHT, GL_RGBA);
 
 	usermask.load("identity.vert", "usermask.frag");
-#ifdef ENABLE_CHECKER
+	#ifdef ENABLE_CHECKER
 	checker.load("identity.vert", "check.frag");
-#endif
+	#endif
 
 	mainWindow->setFullscreen(startFullscreen);
 	needsResize = true;
@@ -95,7 +95,7 @@ void ofApp::setupGui() {
 	paramsExpansion.add(levelsExpansionX.set("Direction X", 0.0, -0.5, 0.5));
 	paramsExpansion.add(levelsExpansionY.set("Direction Y", 0.0, -0.5, 0.5));
 
-#ifdef ENABLE_CHECKER
+	#ifdef ENABLE_CHECKER
 	paramsChecker.setName("Checker pattern");
 	paramsChecker.add(checkerEnabled.set("Enabled", false));
 	paramsChecker.add(checkerOutside.set("Paint outside users", true));
@@ -104,15 +104,15 @@ void ofApp::setupGui() {
 	paramsChecker.add(checkerAmplitude.set("Beat Amplitude", 0.0, 0.0, 5.0));
 	paramsChecker.add(checkerBPM.set("BPM", 130.0, 0.0, 200.0));
 	paramsChecker.add(checkerBeatOffset.set("Beat offset", 0.0, 0.0, 10.0));
-#endif
+	#endif
 
 	gui.setup();
 	gui.add(paramsLayers);
 	gui.add(paramsLevels);
 	gui.add(paramsExpansion);
-#ifdef ENABLE_CHECKER
+	#ifdef ENABLE_CHECKER
 	gui.add(paramsChecker);
-#endif
+	#endif
 
 	recording = false;
 }
@@ -180,7 +180,7 @@ void ofApp::draw(){
 		if (showThreshold) usermask.end();
 	}
 
-#ifdef ENABLE_CHECKER
+	#ifdef ENABLE_CHECKER
 	if (checkerEnabled) {
 		checker.begin();
 		checker.setUniform1f("outside", checkerOutside ? 1.0 : 0.0);
@@ -193,7 +193,7 @@ void ofApp::draw(){
 		glitchEffect->draw(canvasSpace);
 		checker.end();
 	}
-#endif
+	#endif
 
 	// Draw the glitch!
 	if (showRainbows) {
@@ -201,18 +201,18 @@ void ofApp::draw(){
 	}
 
 	if (recording) {
-#ifdef GIFS
+	#ifdef GIFS
 		ofPixels* pixels = new ofPixels;
 		pixels->allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR_ALPHA);
 		canvas.readToPixels(*pixels);
 		imgSaver->push(pixels);
-#else
+	#else
 		ofImage* img = new ofImage;
 		img->setUseTexture(false);
 		img->allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR);
 		canvas.readToPixels(img->getPixelsRef());
 		imgSaver->push(img, ofGetFrameNum());
-#endif
+	#endif
 	}
 	canvas.end();
 
@@ -226,16 +226,16 @@ void ofApp::draw(){
 }
 
 void ofApp::startRecording() {
-#ifdef GIFS
+	#ifdef GIFS
 	string filename = ofGetTimestampString("%F_%H-%M-%S.gif");
 	string path = ofFilePath::join("screenshots", filename);
 	imgSaver = new GifSaver(WIDTH, HEIGHT, (float)FPS, path);
-#else
+	#else
 	string timestamp = ofGetTimestampString("%F_%H-%M-%S");
 	string path = ofFilePath::addTrailingSlash(ofFilePath::join("screenshots", timestamp));
 	ofFilePath::createEnclosingDirectory(path);
 	imgSaver = new AsyncImageSaver(path);
-#endif
+	#endif
 	recording = true;
 }
 
@@ -282,11 +282,11 @@ void ofApp::keyPressed(int key){
 	case 't':
 		showThreshold = !showThreshold;
 		break;
-#ifdef ENABLE_CHECKER
+	#ifdef ENABLE_CHECKER
 	case 'c':
 		checkerEnabled = !checkerEnabled;
 		break;
-#endif
+	#endif
 	case 'r':
 		showRainbows = !showRainbows;
 		break;
