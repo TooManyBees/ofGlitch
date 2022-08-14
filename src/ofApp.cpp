@@ -13,7 +13,7 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 				int parsed;
 				int result = sscanf(argv[i+1], "%d", &parsed);
 				if (result) {
-					backPlane = (float)min(10000, parsed);
+					levelsBackplane = min(10000, parsed);
 				}
 			}
 		}
@@ -44,8 +44,8 @@ void ofApp::setup(){
 	mainWindow->setVerticalSync(true);
 	guiWindow->setVerticalSync(true);
 	ofSetFrameRate(FPS);
-	if (oni_manager.setup(WIDTH, HEIGHT, 30, backPlane, mirror, useHistogram)) {
-		cout << "Setup device and streams.\n" << "Backplane at " << backPlane << endl;
+	if (oni_manager.setup(WIDTH, HEIGHT, 30, mirror, useHistogram)) {
+		cout << "Setup device and streams." << endl;
 	}
 	else {
 		cerr << openni::OpenNI::getExtendedError() << endl;
@@ -86,6 +86,9 @@ void ofApp::setupGui() {
 	paramsLayers.add(showRainbows.set("Show Rainbows", true));
 
 	paramsLevels.setName("Levels");
+	int startingBackplane = levelsBackplane;
+	if (startingBackplane == 0) startingBackplane = 10000;
+	paramsLevels.add(levelsBackplane.set("Backplane", startingBackplane, 0, 10000));
 	paramsLevels.add(levelsRainbow.set("Rainbows", 0.6, 0.0, 1.0));
 	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));
 	paramsLevels.add(levelsUser.set("User boost", 0.0, 0.0, 1.0));
@@ -136,7 +139,7 @@ unsigned char underflowDiff(unsigned char a, unsigned char b) {
 //--------------------------------------------------------------
 void ofApp::update(){
 	oni_manager.getColorFrame(&colorFrame);
-	oni_manager.getDepthFrame(&depthFrame);
+	oni_manager.getDepthFrame(&depthFrame, levelsBackplane);
 	oni_manager.getUserFrame(&userFrame);
 
 	ofFloatColor color;

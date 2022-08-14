@@ -9,10 +9,10 @@
 class OniManager {
 public:
 	//~OniManager();
-	bool setup(int w, int h, int fps, float backPlane = 10000, bool mirror = true, bool useHistogram = false);
+	bool setup(int w, int h, int fps, bool mirror = true, bool useHistogram = false);
 
 	void getColorFrame(ofImage* image);
-	void getDepthFrame(ofImage* image);
+	void getDepthFrame(ofImage* image, int backplane = 10000);
 	void getUserMask(bool *users);
 	void getUserFrame(ofImage* image);
 
@@ -33,6 +33,5 @@ private:
 	unsigned char* pDepthMap;
 	float depthHistogram[MAX_DEPTH];
 	bool USE_HISTOGRAM = false;
-	openni::DepthPixel BACK_PLANE;
-	void histogram(float* pHistogram, openni::VideoFrameRef& frame);
+	void histogram(float* pHistogram, openni::VideoFrameRef& frame, int backplane);
 };

@@ -10,7 +10,7 @@
 //	openni::OpenNI::shutdown();
 //}
 
-bool OniManager::setup(int w, int h, int fps, float backPlane, bool mirror, bool useHistogram) {
+bool OniManager::setup(int w, int h, int fps, bool mirror, bool useHistogram) {
 	//colorFrameTimestamp = 0;
 	//userFrameTimestamp = 0;
 
@@ -44,13 +44,12 @@ bool OniManager::setup(int w, int h, int fps, float backPlane, bool mirror, bool
 	device.setImageRegistrationMode(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR);
 
 	pDepthMap = new unsigned char[w * h];
-	BACK_PLANE = backPlane;
 	USE_HISTOGRAM = useHistogram;
 
 	return true;
 }
 
-void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's invoked, ugh */) {
+void OniManager::getDepthFrame(ofImage* image, int backplane) {
 	userFrame.release(); // does this need a conditional?
 
 	userTracker.readFrame(&userFrame);
@@ -61,7 +60,7 @@ void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's i
 	openni::VideoFrameRef depthFrame = userFrame.getDepthFrame();
 
 	if (depthFrame.isValid()) {
-		if (USE_HISTOGRAM) histogram(depthHistogram, depthFrame);
+		if (USE_HISTOGRAM) histogram(depthHistogram, depthFrame, backplane);
 		int frameWidth = depthFrame.getWidth();
 		int frameHeight = depthFrame.getHeight();
 		memset(pDepthMap, 0, frameWidth * frameHeight);
@@ -84,14 +83,14 @@ void OniManager::getDepthFrame(ofImage* image /* named `depthFrame` where it's i
 						*pTex = nHistValue;
 					}
 					else {
-						float brightness = (float)max(0, BACK_PLANE - *pDepth) / (float)BACK_PLANE;
+						float brightness = (float)max(0, backplane - *pDepth) / (float)backplane;
 						*pTex = (unsigned char)(255 * brightness);
 					}
 				}
 			}
 
 			pDepthRow += rowSize;
-			pMap += 640;
+			pMap += frameWidth;
 		}
 
 		image->setFromPixels(pDepthMap, frameWidth, frameHeight, OF_IMAGE_GRAYSCALE);
@@ -128,7 +127,7 @@ void OniManager::getColorFrame(ofImage* image) {
 //	}
 //}
 
-void OniManager::histogram(float *pHistogram, openni::VideoFrameRef& frame) {
+void OniManager::histogram(float *pHistogram, openni::VideoFrameRef& frame, int backplane) {
 	memset(pHistogram, 0, MAX_DEPTH * sizeof(float));
 	const openni::DepthPixel* pDepth = (const openni::DepthPixel*)frame.getData();
 	int restOfRow = frame.getStrideInBytes() / sizeof(openni::DepthPixel) - frame.getWidth();
@@ -138,7 +137,7 @@ void OniManager::histogram(float *pHistogram, openni::VideoFrameRef& frame) {
 	unsigned int nNumberOfPoints = 0;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++, pDepth++) {
-			if (*pDepth != 0 && *pDepth <= BACK_PLANE) {
+			if (*pDepth != 0 && *pDepth <= backplane) {
 				pHistogram[*pDepth]++;
 				nNumberOfPoints++;
 			}

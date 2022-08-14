@@ -48,7 +48,6 @@ class ofApp : public ofBaseApp{
 		shared_ptr<ofAppBaseWindow> guiWindow;
 		bool mirror = true;
 		bool startFullscreen = false;
-		float backPlane = 10000;
 		bool useHistogram = false;
 		OniManager oni_manager;
 
@@ -97,6 +96,7 @@ class ofApp : public ofBaseApp{
 		ofParameter<bool> showThreshold;
 		ofParameter<bool> showRainbows;
 		ofParameterGroup paramsLevels;
+		ofParameter<int> levelsBackplane;
 		ofParameter<float> levelsRainbow;
 		ofParameter<float> levelsThreshold;
 		ofParameter<float> levelsUser;
