@@ -87,7 +87,7 @@ void ofApp::setupGui() {
 
 	paramsLevels.setName("Levels");
 	int startingBackplane = levelsBackplane;
-	if (startingBackplane == 0) startingBackplane = 10000;
+	if (startingBackplane <= 0 || startingBackplane > 10000) startingBackplane = 10000;
 	paramsLevels.add(levelsBackplane.set("Backplane", startingBackplane, 0, 10000));
 	paramsLevels.add(levelsRainbow.set("Rainbows", 0.6, 0.0, 1.0));
 	paramsLevels.add(levelsThreshold.set("Threshold", 0.35, 0.0, 1.0));

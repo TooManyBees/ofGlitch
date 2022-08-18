@@ -16,6 +16,7 @@ void RainbowClassic::update(ofImage &depthFrame, ofImage &userFrame, ofFloatColo
 	glitchIn.setUniformTexture("userTex", userFrame, 2);
 	glitchIn.setUniform1f("expansion", expansion);
 	glitchIn.setUniform2f("expansionVector", expansionVector);
+	glitchIn.setUniform2f("resolution", width, height);
 	glitchIn.setUniform1f("boostUser", boostUser);
 	glitchFbo.begin();
 	depthFrame.draw(0, 0, width, height);
