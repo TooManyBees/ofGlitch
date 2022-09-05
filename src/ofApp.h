@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxMidi.h"
 #include "OpenNI.h"
 #include "OniManager.h"
 #include "ofxGui.h"
@@ -12,7 +13,7 @@
 
 #define GIFS
 
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp, public ofxMidiListener {
 
 	public:
 		ofApp(shared_ptr<ofAppBaseWindow> _mainWindow, shared_ptr<ofAppBaseWindow> _guiWindow) : mainWindow(_mainWindow), guiWindow(_guiWindow) {};
@@ -20,6 +21,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -42,6 +44,12 @@ class ofApp : public ofBaseApp{
 		void keyPressedInGui(ofKeyEventArgs & args);
 
 		void quit(ofEventArgs & args);
+
+		void newMidiMessage(ofxMidiMessage& eventArgs);
+		bool midiConnected = false;
+		ofxMidiIn midiIn;
+		std::deque<ofxMidiMessage> midiMessages;
+		size_t maxMidiMessageCount = 0;
 
 	private:
 		shared_ptr<ofAppBaseWindow> mainWindow;

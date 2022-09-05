@@ -60,6 +60,14 @@ void ofApp::setup(){
 
 	canvas.allocate(WIDTH, HEIGHT, GL_RGBA);
 
+	if (midiIn.getNumInPorts() > 0) {
+		midiIn.openPort(0);
+		midiIn.ignoreTypes(false, false, false);
+		midiIn.addListener(this);
+		midiIn.setVerbose(true);
+		midiConnected = true;
+	}
+
 	usermask.load("identity.vert", "usermask.frag");
 #ifdef ENABLE_CHECKER
 	checker.load("identity.vert", "check.frag");
@@ -116,6 +124,11 @@ void ofApp::setupGui() {
 	recording = false;
 }
 
+void ofApp::exit() {
+	midiIn.closePort();
+	midiIn.removeListener(this);
+}
+
 unsigned char mysteryDiff(unsigned char a, unsigned char b) {
 	unsigned char c = a > b ? a - b : b - a;
 	return c > (b / 2) ? c - 1 : c;
@@ -144,6 +157,15 @@ void ofApp::update(){
 	glitchEffect->update(depthFrame, userFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector, levelsUser);
 
 	if (needsResize) sizeProjectionSpace();
+
+	if (midiConnected && midiMessages.size() > 0) {
+		maxMidiMessageCount = max(maxMidiMessageCount, midiMessages.size());
+		cout << midiMessages.size() << " events (max " << maxMidiMessageCount << ")" << endl;
+		for (auto &const event : midiMessages) {
+			cout << "msg" << endl;
+		}
+		midiMessages.clear();
+	}
 
 	if (recording) {
 		numRecordingFrames += 1;
@@ -244,6 +266,10 @@ void ofApp::endRecording() {
 
 void ofApp::drawGui(ofEventArgs & args) {
 	gui.draw();
+}
+
+void ofApp::newMidiMessage(ofxMidiMessage& eventArgs) {
+	midiMessages.push_back(eventArgs);
 }
 
 //--------------------------------------------------------------
@@ -389,5 +415,5 @@ float ofApp::cyclePerMinute(float rpm, float offset) {
 #endif
 
 void ofApp::quit(ofEventArgs & args) {
-	std::exit(0);
+	ofExit();
 }
