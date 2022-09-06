@@ -48,8 +48,6 @@ class ofApp : public ofBaseApp, public ofxMidiListener {
 		void newMidiMessage(ofxMidiMessage& eventArgs);
 		bool midiConnected = false;
 		ofxMidiIn midiIn;
-		std::deque<ofxMidiMessage> midiMessages;
-		size_t maxMidiMessageCount = 0;
 
 	private:
 		shared_ptr<ofAppBaseWindow> mainWindow;

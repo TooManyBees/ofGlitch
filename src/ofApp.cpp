@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "Arturia.h"
 
 void ofApp::parseArgs(int argc, char* argv[]) {
 	for (int i = 0; i < argc; i++) {
@@ -62,9 +63,9 @@ void ofApp::setup(){
 
 	if (midiIn.getNumInPorts() > 0) {
 		midiIn.openPort(0);
-		midiIn.ignoreTypes(false, false, false);
+		// midiIn.ignoreTypes(false, false, false);
 		midiIn.addListener(this);
-		midiIn.setVerbose(true);
+		// midiIn.setVerbose(true);
 		midiConnected = true;
 	}
 
@@ -157,15 +158,6 @@ void ofApp::update(){
 	glitchEffect->update(depthFrame, userFrame, color, levelsRainbow, 1.0 - levelsExpansion, expansionVector, levelsUser);
 
 	if (needsResize) sizeProjectionSpace();
-
-	if (midiConnected && midiMessages.size() > 0) {
-		maxMidiMessageCount = max(maxMidiMessageCount, midiMessages.size());
-		cout << midiMessages.size() << " events (max " << maxMidiMessageCount << ")" << endl;
-		for (auto &const event : midiMessages) {
-			cout << "msg" << endl;
-		}
-		midiMessages.clear();
-	}
 
 	if (recording) {
 		numRecordingFrames += 1;
@@ -268,8 +260,23 @@ void ofApp::drawGui(ofEventArgs & args) {
 	gui.draw();
 }
 
-void ofApp::newMidiMessage(ofxMidiMessage& eventArgs) {
-	midiMessages.push_back(eventArgs);
+void ofApp::newMidiMessage(ofxMidiMessage& message) {
+	switch (message.status) {
+	// case MIDI_NOTE_ON:
+	// case MIDI_NOTE_OFF:
+	case MIDI_CONTROL_CHANGE:
+		printf("control %d: %d\n", message.control, arturia::relative3(message.value));
+		break;
+	case MIDI_PITCH_BEND:
+		printf("pitch bend: %d\n", message.value);
+		break;
+	case MIDI_AFTERTOUCH:
+		printf("control %d pressure: %d", message.control, message.value);
+		break;
+	case MIDI_POLY_AFTERTOUCH:
+		printf("key %d pressure: %d", message.pitch, message.value);
+		break;
+	}
 }
 
 //--------------------------------------------------------------

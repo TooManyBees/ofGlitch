@@ -209,6 +209,7 @@
     <ClCompile Include="..\..\..\addons\ofxMidi\src\ofxMidiTimecode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Arturia.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\AsyncImageSaver.h" />
     <ClInclude Include="src\GifSaver.h" />
