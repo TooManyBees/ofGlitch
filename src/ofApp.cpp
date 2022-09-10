@@ -12,7 +12,7 @@ void ofApp::parseArgs(int argc, char* argv[]) {
 		else if (strcmp(argv[i], "--depth") == 0) {
 			if (i < argc-1 && strstr(argv[i+1], "-") == NULL) {
 				int parsed;
-				int result = sscanf(argv[i+1], "%d", &parsed);
+				int result = sscanf_s(argv[i+1], "%d", &parsed);
 				if (result) {
 					backPlane = (float)min(10000, parsed);
 				}
@@ -436,7 +436,7 @@ void ofApp::newMidiMessage(ofxMidiMessage& message) {
 		break;
 	default:
 		char buf[50];
-		sprintf(buf, "Unrecognized MIDI control %d %d", update, update.control);
+		sprintf_s(buf, "Unrecognized MIDI control %d %d", update.control, update.value);
 		ofLogWarning(string(buf));
 	}
 }
