@@ -13,6 +13,20 @@
 
 #define GIFS
 
+enum Levels {
+	Rainbow,
+	Threshold,
+	User,
+	Expansion,
+	ExpansionX,
+	ExpansionY,
+};
+
+struct DisplayParam {
+	Levels param;
+	uint64_t frameNumber;
+};
+
 class ofApp : public ofBaseApp, public ofxMidiListener {
 
 	public:
@@ -43,6 +57,8 @@ class ofApp : public ofBaseApp, public ofxMidiListener {
 		void drawGui(ofEventArgs & args);
 		void keyPressedInGui(ofKeyEventArgs & args);
 
+		void drawTempGui();
+
 		void quit(ofEventArgs & args);
 
 		void newMidiMessage(ofxMidiMessage& eventArgs);
@@ -69,6 +85,7 @@ class ofApp : public ofBaseApp, public ofxMidiListener {
 		GlitchEffect* glitchEffect;
 		size_t glitchIndex = 0;
 		vector<GlitchEffect*> glitches;
+		void reloadShaders();
 
 #ifdef ENABLE_CHECKER
 		ofShader checker;
@@ -120,4 +137,7 @@ class ofApp : public ofBaseApp, public ofxMidiListener {
 		ofParameter<float> checkerBeatOffset;
 #endif
 		ofxGuiGroup gui;
+		ofxGuiGroup tempGui;
+		vector<DisplayParam> renderParamsThisFrame;
+		void renderParamThisFrame(Levels param);
 };

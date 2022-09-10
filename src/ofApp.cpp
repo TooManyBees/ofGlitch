@@ -99,9 +99,9 @@ void ofApp::setupGui() {
 	paramsLevels.add(levelsUser.set("User boost", 0.0, 0.0, 1.0));
 
 	paramsExpansion.setName("Expansion");
-	paramsExpansion.add(levelsExpansion.set("Magnitude", 0.0, -0.5, 0.5));
-	paramsExpansion.add(levelsExpansionX.set("Direction X", 0.0, -0.5, 0.5));
-	paramsExpansion.add(levelsExpansionY.set("Direction Y", 0.0, -0.5, 0.5));
+	paramsExpansion.add(levelsExpansion.set("Magnitude", 0.0, -1, 1));
+	paramsExpansion.add(levelsExpansionX.set("Direction X", 0.0, -1, 1));
+	paramsExpansion.add(levelsExpansionY.set("Direction Y", 0.0, -1, 1));
 
 #ifdef ENABLE_CHECKER
 	paramsChecker.setName("Checker pattern");
@@ -121,6 +121,8 @@ void ofApp::setupGui() {
 #ifdef ENABLE_CHECKER
 	gui.add(paramsChecker);
 #endif
+
+	tempGui.setup();
 
 	recording = false;
 }
@@ -163,6 +165,18 @@ void ofApp::update(){
 		numRecordingFrames += 1;
 		if (numRecordingFrames > MAX_RECORDING_FRAMES) {
 			endRecording();
+		}
+	}
+
+	if (!renderParamsThisFrame.empty()) {
+		vector<size_t> toRemove;
+		for (int i = 0; i < renderParamsThisFrame.size(); i++) {
+			if (renderParamsThisFrame[i].frameNumber + 20 < ofGetFrameNum()) {
+				toRemove.push_back(i);
+			}
+		}
+		for (int i = 0; i < toRemove.size(); i++) {
+			renderParamsThisFrame.erase(renderParamsThisFrame.begin() + i);
 		}
 	}
 }
@@ -233,6 +247,37 @@ void ofApp::draw(){
 		ofDrawCircle(20, 20, 5);
 		ofSetColor(255);
 	}
+
+	drawTempGui();
+}
+
+void ofApp::drawTempGui() {
+	if (renderParamsThisFrame.empty()) return;
+
+	for (auto & displayParam : renderParamsThisFrame) {
+		switch (displayParam.param) {
+		case Rainbow:
+			tempGui.add(levelsRainbow);
+			break;
+		case Threshold:
+			tempGui.add(levelsThreshold);
+			break;
+		case User:
+			tempGui.add(levelsUser);
+			break;
+		case Expansion:
+			tempGui.add(levelsExpansion);
+			break;
+		case ExpansionX:
+			tempGui.add(levelsExpansionX);
+			break;
+		case ExpansionY:
+			tempGui.add(levelsExpansionY);
+			break;
+		}
+	}
+	tempGui.draw();
+	tempGui.clear();
 }
 
 void ofApp::startRecording() {
@@ -260,22 +305,144 @@ void ofApp::drawGui(ofEventArgs & args) {
 	gui.draw();
 }
 
-void ofApp::newMidiMessage(ofxMidiMessage& message) {
+enum Control {
+	UnknownControl,
+	Ignore,
+	RecordImages = 26,
+	ReloadShaders = 20,
+	ShowBuffer = 21,
+	ShowVideo = 22,
+	ShowThreshold = 23,
+	ShowRainbows = 24,
+	ChangeEffect = 25,
+	LevelsRainbow = 102,
+	LevelsThreshold = 103,
+	LevelsUser = 104,
+	LevelsExpansion = 105,
+	LevelsExpansionX = 106,
+	LevelsExpansionY = 107,
+};
+
+struct ControlAction {
+	Control control;
+	int value;
+};
+
+ControlAction decodeMidi(ofxMidiMessage& message) {
 	switch (message.status) {
-	// case MIDI_NOTE_ON:
-	// case MIDI_NOTE_OFF:
 	case MIDI_CONTROL_CHANGE:
-		printf("control %d: %d\n", message.control, arturia::relative3(message.value));
+		switch (message.control) {
+		case ReloadShaders:
+			return message.value ? ControlAction{ ReloadShaders } : ControlAction{ Ignore };
+		case ShowBuffer:
+			return message.value ? ControlAction{ ShowBuffer } : ControlAction{ Ignore };
+		case ShowVideo:
+			return message.value ? ControlAction{ ShowVideo } : ControlAction{ Ignore };
+		case ShowThreshold:
+			return message.value ? ControlAction{ ShowThreshold } : ControlAction{ Ignore };
+		case ShowRainbows:
+			return message.value ? ControlAction{ ShowRainbows } : ControlAction{ Ignore };
+		case ChangeEffect:
+			return message.value ? ControlAction{ ChangeEffect } : ControlAction{ Ignore };
+		case RecordImages:
+			return message.value ? ControlAction{ RecordImages } : ControlAction{ Ignore };
+		case LevelsRainbow:
+			return ControlAction{ LevelsRainbow, arturia::relative2(message.value) };
+		case LevelsThreshold:
+			return ControlAction{ LevelsThreshold, arturia::relative2(message.value) };
+		case LevelsUser:
+			return ControlAction{ LevelsUser, arturia::relative2(message.value) };
+		case LevelsExpansion:
+			return ControlAction{ LevelsExpansion, arturia::relative2(message.value) };
+		case LevelsExpansionX:
+			return ControlAction{ LevelsExpansionX, arturia::relative2(message.value) };
+		case LevelsExpansionY:
+			return ControlAction{ LevelsExpansionY, arturia::relative2(message.value) };
+		}
+	case MIDI_PROGRAM_CHANGE:
+		// TODO
+	default:
+		return ControlAction{ UnknownControl, message.control };
+	}
+}
+
+void ofApp::renderParamThisFrame(Levels param) {
+	for (auto & element : renderParamsThisFrame) {
+		if (param == element.param) {
+			element.frameNumber = ofGetFrameNum();
+			return;
+		}
+	}
+	renderParamsThisFrame.push_back(DisplayParam{ param, ofGetFrameNum() });
+}
+
+void ofApp::newMidiMessage(ofxMidiMessage& message) {
+	ControlAction update = decodeMidi(message);
+	switch (update.control) {
+	case ReloadShaders:
+		reloadShaders();
 		break;
-	case MIDI_PITCH_BEND:
-		printf("pitch bend: %d\n", message.value);
+	case RecordImages:
+		if (recording) endRecording();
+		else startRecording();
 		break;
-	case MIDI_AFTERTOUCH:
-		printf("control %d pressure: %d", message.control, message.value);
+	case ShowBuffer:
+		showBuffer = !showBuffer;
 		break;
-	case MIDI_POLY_AFTERTOUCH:
-		printf("key %d pressure: %d", message.pitch, message.value);
+	case ShowVideo:
+		showVideo = !showVideo;
 		break;
+	case ShowThreshold:
+		showThreshold = !showThreshold;
+		break;
+	case ShowRainbows:
+		showRainbows = !showRainbows;
+		break;
+	case ChangeEffect:
+		glitchIndex = (glitchIndex + 1) % glitches.size();
+		glitchEffect = glitches[glitchIndex];
+		break;
+	case LevelsRainbow:
+		levelsRainbow = ofClamp(levelsRainbow + 0.01 * update.value, 0, 1);
+		renderParamThisFrame(Rainbow);
+		break;
+	case LevelsThreshold:
+		levelsThreshold = ofClamp(levelsThreshold + 0.02 * update.value, 0, 1);
+		renderParamThisFrame(Threshold);
+		break;
+	case LevelsUser:
+		levelsUser = ofClamp(levelsUser + 0.02 * update.value, 0, 1);
+		renderParamThisFrame(User);
+		break;
+	case LevelsExpansion:
+		levelsExpansion = ofClamp(levelsExpansion + 0.01 * update.value, -1, 1);
+		renderParamThisFrame(Expansion);
+		break;
+	case LevelsExpansionX:
+		levelsExpansionX = ofClamp(levelsExpansionX + 0.01 * update.value, -1, 1);
+		renderParamThisFrame(ExpansionX);
+		break;
+	case LevelsExpansionY:
+		levelsExpansionY = ofClamp(levelsExpansionY + 0.01 * update.value, -1, 1);
+		renderParamThisFrame(ExpansionY);
+		break;
+	case Ignore:
+		break;
+	default:
+		char buf[50];
+		sprintf(buf, "Unrecognized MIDI control %d %d", update, update.control);
+		ofLogWarning(string(buf));
+	}
+}
+
+void ofApp::reloadShaders() {
+	glitchEffect->markShadersDirty();
+	{
+		usermask.load("identity.vert", "usermask.frag");
+		GLint err = glGetError();
+		if (err != GL_NO_ERROR) {
+			ofLogNotice() << "Shader 'usermask.frag' failed to compile:" << endl << err << endl;
+		}
 	}
 }
 
@@ -283,14 +450,7 @@ void ofApp::newMidiMessage(ofxMidiMessage& message) {
 void ofApp::keyPressed(int key){
 	switch (key) {
 	case ' ':
-		glitchEffect->markShadersDirty();
-		{
-			usermask.load("identity.vert", "usermask.frag");
-			GLint err = glGetError();
-			if (err != GL_NO_ERROR) {
-				ofLogNotice() << "Shader 'usermask.frag' failed to compile:" << endl << err << endl;
-			}
-		}
+		reloadShaders();
 		break;
 	case '\t':
 		glitchIndex = (glitchIndex + 1) % glitches.size();
@@ -320,16 +480,16 @@ void ofApp::keyPressed(int key){
 		showRainbows = !showRainbows;
 		break;
 	case OF_KEY_UP:
-		levelsRainbow -= 0.05;
+		levelsRainbow = ofClamp(levelsRainbow + 0.05, 0, 1);
 		break;
 	case OF_KEY_DOWN:
-		levelsRainbow += 0.05;
+		levelsRainbow = ofClamp(levelsRainbow - 0.05, 0, 1);
 		break;
 	case OF_KEY_LEFT:
-		levelsThreshold += 0.025;
+		levelsThreshold = ofClamp(levelsThreshold + 0.025, 0, 1);
 		break;
 	case OF_KEY_RIGHT:
-		levelsThreshold -= 0.025;
+		levelsThreshold = ofClamp(levelsThreshold - 0.025, 0, 1);
 		break;
 	case OF_KEY_RETURN:
 		if (recording) {
