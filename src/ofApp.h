@@ -137,7 +137,7 @@ class ofApp : public ofBaseApp, public ofxMidiListener {
 		ofParameter<float> checkerBeatOffset;
 #endif
 		ofxGuiGroup gui;
-		ofxGuiGroup tempGui;
 		vector<DisplayParam> renderParamsThisFrame;
 		void renderParamThisFrame(Levels param);
+		void drawParam(ofParameter<float> param, int pos);
 };

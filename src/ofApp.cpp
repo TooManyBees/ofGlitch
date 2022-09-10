@@ -122,8 +122,6 @@ void ofApp::setupGui() {
 	gui.add(paramsChecker);
 #endif
 
-	tempGui.setup();
-
 	recording = false;
 }
 
@@ -254,30 +252,35 @@ void ofApp::draw(){
 void ofApp::drawTempGui() {
 	if (renderParamsThisFrame.empty()) return;
 
-	for (auto & displayParam : renderParamsThisFrame) {
-		switch (displayParam.param) {
+	for (int i = 0; i < renderParamsThisFrame.size(); i++) {
+		switch (renderParamsThisFrame[i].param) {
 		case Rainbow:
-			tempGui.add(levelsRainbow);
+			drawParam(levelsRainbow, i);
 			break;
 		case Threshold:
-			tempGui.add(levelsThreshold);
+			drawParam(levelsThreshold, i);
 			break;
 		case User:
-			tempGui.add(levelsUser);
+			drawParam(levelsUser, i);
 			break;
 		case Expansion:
-			tempGui.add(levelsExpansion);
+			drawParam(levelsExpansion, i);
 			break;
 		case ExpansionX:
-			tempGui.add(levelsExpansionX);
+			drawParam(levelsExpansionX, i);
 			break;
 		case ExpansionY:
-			tempGui.add(levelsExpansionY);
+			drawParam(levelsExpansionY, i);
 			break;
 		}
 	}
-	tempGui.draw();
-	tempGui.clear();
+}
+
+void ofApp::drawParam(ofParameter<float> param, int pos) {
+	int x = 20;
+	int y = ofGetHeight() - 20 - pos * 20;
+	ofDrawBitmapString(param.getName(), x, y);
+	ofDrawBitmapString(param.toString(), x + 100, y);
 }
 
 void ofApp::startRecording() {
@@ -416,14 +419,17 @@ void ofApp::newMidiMessage(ofxMidiMessage& message) {
 		break;
 	case LevelsExpansion:
 		levelsExpansion = ofClamp(levelsExpansion + 0.01 * update.value, -1, 1);
+		if (abs(levelsExpansion) < 0.005) levelsExpansion = 0;
 		renderParamThisFrame(Expansion);
 		break;
 	case LevelsExpansionX:
 		levelsExpansionX = ofClamp(levelsExpansionX + 0.01 * update.value, -1, 1);
+		if (abs(levelsExpansionX) < 0.005) levelsExpansionX = 0;
 		renderParamThisFrame(ExpansionX);
 		break;
 	case LevelsExpansionY:
 		levelsExpansionY = ofClamp(levelsExpansionY + 0.01 * update.value, -1, 1);
+		if (abs(levelsExpansionY) < 0.005) levelsExpansionY = 0;
 		renderParamThisFrame(ExpansionY);
 		break;
 	case Ignore:
